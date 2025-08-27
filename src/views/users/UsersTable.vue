@@ -1,129 +1,119 @@
 <template>
-    <waiter ref="tableWaiter" :show="loading">
-        <action-table name="Users"
-                      ref="table"
-                      table-type="server"
-                      :columns="columns"
-                      :options="options"
-                      class="users-table"
-                      @row-click="onRowClick">
-            <template #filterDropdown>
-                <action-dropdown-item
-                    :active="!trashed"
-                    @click="setFilter(false)">Active user
-                </action-dropdown-item>
-                <action-dropdown-item
-                    :active="trashed"
-                    @click="setFilter(true)">Deleted users
-                </action-dropdown-item>
-            </template>
-            <!--Actions-->
-            <template #actions="props">
-                <action-group>
-                    <action-button @action="onActionNew()"
-                                   title="New user"
-                                   :icon="$icons.new"
-                                   shortkey="['ctrl', 'o']">
-                    </action-button>
-                    <action-button v-show="props.rows && props.rows.length===1"
-                                   @action="onActionEdit(props.rows)"
-                                   :disabled="!!trashed"
-                                   title="Edit user"
-                                   :icon="$icons.edit">
-                    </action-button>
-                    <action-button v-show="props.rows && props.rows.length>0"
-                                   @action="onActionDelete(props.rows)"
-                                   title="Delete user"
-                                   :icon="$icons.delete">
-                    </action-button>
-                    <action-button v-show="props.rows && props.rows.length>0"
-                                   @action="onActionAddToGroup(props.rows)"
-                                   :disabled="!!trashed"
-                                   title="Add to group ..."
-                                   :icon="$icons.group_add">
-                    </action-button>
-                    <action-button v-show="props.rows && props.rows.length>0 && ug_id>0"
-                                   @action="onActionRemoveFromGroup(props.rows)"
-                                   :disabled="!!trashed"
-                                   title="Remove from this group"
-                                   :icon="$icons.group_remove">
-                    </action-button>
-                    <action-group-separator></action-group-separator>
-                    <action-button @action="load"
-                                   title="Reload"
-                                   :icon="$icons.reload">
-                    </action-button>
-                </action-group>
-            </template>
-            <template #col-action="props">
-                <action-group @click.stop="void 0">
-                    <action-button @action="onActionEdit([props.row])"
-                                   :disabled="!!trashed"
-                                   :icon="$icons.edit">
-                    </action-button>
-                    <action-button @action="onActionDelete([props.row])"
-                                   :icon="$icons.delete">
-                    </action-button>
-                    <action-button @action="onActionAddToGroup([props.row])"
-                                   :disabled="!!trashed"
-                                   title="Add to group"
-                                   :icon="$icons.group_add">
-                    </action-button>
-                    <action-button v-show="ug_id>0"
-                                   @action="onActionRemoveFromGroup([props.row])"
-                                   :disabled="!!trashed"
-                                   title="Remove from this group"
-                                   :icon="$icons.group_remove">
-                    </action-button>
-                </action-group>
-            </template>
-            <template #contextmenu="props">
-                <x-context-menu-item
-                    v-show="props.rows && props.rows.length===1"
-                    :disabled="!!trashed"
-                    @click="onActionEdit(props.rows)"
-                    :icon="$icons.edit">Edit
-                </x-context-menu-item>
-                <x-context-menu-item
-                    @click="onActionDelete(props.rows)"
-                    :icon="$icons.delete">
-                    Delete
-                </x-context-menu-item>
-                <x-context-menu-item
-                    @click="onActionAddToGroup(props.rows)"
-                    :disabled="!!trashed"
-                    :icon="$icons.group_add">
-                    Add to group ...
-                </x-context-menu-item>
-                <x-context-menu-item
-                    v-show="ug_id>0"
-                    @click="onActionRemoveFromGroup(props.rows)"
-                    :disabled="!!trashed"
-                    :icon="$icons.group_remove">
-                    Remove from this group
-                </x-context-menu-item>
-            </template>
-            <!--Columns-->
-            <template #u_email="props">
-                {{ props.row.u_email }}
-                <template v-if="isMailhost(props.row.u_email)">
-                    <b-badge class="ml-1" v-if="props.row.u_mailsize==='forward' || props.row.u_ismailbox">
-                        {{ props.row.u_mailsize }}
-                    </b-badge>
-                </template>
-                <b-badge class="ml-1" v-if="isMailList(props.row.u_maildest)">maillist</b-badge>
-            </template>
-        </action-table>
-    </waiter>
+    <div class="users-table">
+        <waiter ref="tableWaiter" :show="loading">
+                <!-- Action Toolbar -->
+                <div class="mb-3">
+                    <action-group>
+                        <action-button @action="onActionNew()"
+                                       title="New user"
+                                       :icon="$icons.new"
+                                       shortkey="['ctrl', 'o']">
+                            New User
+                        </action-button>
+                        <action-button v-show="selectedRows.length === 1"
+                                       @action="onActionEdit(selectedRows)"
+                                       title="Edit user"
+                                       :disabled="!!trashed"
+                                       :icon="$icons.edit">
+                            Edit
+                        </action-button>
+                        <action-button v-show="selectedRows.length > 0"
+                                       @action="onActionDelete(selectedRows)"
+                                       title="Delete user"
+                                       :disabled="!!trashed"
+                                       :icon="$icons.delete">
+                            Delete
+                        </action-button>
+                        <action-group-separator></action-group-separator>
+                        <action-dropdown title="Filter">
+                            <action-dropdown-item
+                                :active="!trashed"
+                                @click="setFilter(false)">
+                                Active users
+                            </action-dropdown-item>
+                            <action-dropdown-item
+                                :active="trashed"
+                                @click="setFilter(true)">
+                                Deleted users
+                            </action-dropdown-item>
+                        </action-dropdown>
+                        <action-group-separator></action-group-separator>
+                        <action-button @action="load"
+                                       title="Reload"
+                                       :icon="$icons.reload">
+                            Refresh
+                        </action-button>
+                    </action-group>
+                </div>
+
+                <!-- Vue3 Easy Data Table -->
+                <EasyDataTable
+                    ref="dataTable"
+                    v-model:items-selected="selectedRows"
+                    :headers="headers"
+                    :items="users"
+                    :loading="loading"
+                    show-select
+                    alternating
+                    border-cell
+                    buttons-pagination
+                    :rows-per-page="25"
+                    :rows-per-page-options="[10, 25, 50, 100]"
+                    :search-field="searchField"
+                    :search-value="searchValue"
+                    @click-row="onRowClick"
+                    class="users-data-table">
+
+                    <!-- Custom column templates -->
+                    <template #item-u_email="item">
+                        {{ item.u_email }}
+                        <template v-if="isMailhost(item.u_email)">
+                            <span class="badge bg-info ms-1" v-if="item.u_mailsize==='forward' || item.u_ismailbox">
+                                {{ item.u_mailsize }}
+                            </span>
+                        </template>
+                        <span class="badge bg-secondary ms-1" v-if="isMailList(item.u_maildest)">maillist</span>
+                    </template>
+
+                    <template #item-u_lastlogin="item">
+                        {{ formatDate(item.u_lastlogin) }}
+                    </template>
+
+                    <template #item-actions="item">
+                        <action-group @click.stop="void 0">
+                            <action-button @action="onActionEdit([item])"
+                                           title="Edit user"
+                                           :icon="$icons.edit"
+                                           size="sm">
+                            </action-button>
+                            <action-button @action="onActionDelete([item])"
+                                           title="Delete user"
+                                           :disabled="!!trashed"
+                                           :icon="$icons.delete"
+                                           size="sm">
+                            </action-button>
+                        </action-group>
+                    </template>
+
+                    <!-- Empty state -->
+                    <template #empty-message>
+                        <div class="text-center text-muted py-4">
+                            <i :class="$icons.info" class="fs-1 mb-2"></i>
+                            <p>No users found</p>
+                        </div>
+                    </template>
+                </EasyDataTable>
+        </waiter>
+    </div>
 </template>
 
 <script>
-
 import {R_USER_EDIT} from '@/router/routs'
 import transformTree from "@/shared/transformTree"
 import usersApi from '@/services/api/users'
 import SelectDialog from '@/components/dialogs/SelectDialog'
-import DeleteUserDialog from "@/components/dialogs/DeleteUserDialog";
+import DeleteUserDialog from "@/components/dialogs/DeleteUserDialog"
+import formatDate from "@modules/utils/formatDate"
 
 export default {
     name: "UsersTable",
@@ -134,37 +124,17 @@ export default {
         return {
             trashed: false,
             loading: false,
-            searchQuery: '',
-            columns: [
-                'col-check',
-                'u_id',
-                'u_email',
-                'react_count',
-                'u_lastlogin',
-                'col-action'
-            ],
-            options: {
-                useFilterSearchQuery: true,
-                useFilterByColumn: true,
-                filterableColumns: [
-                    'u_id',
-                    'u_email',
-                ],
-                requestFunction: this.requestFunction,
-                sortable: [
-                    'u_id',
-                    'u_email',
-                    //'react_count',
-                    'u_lastlogin'
-                ],
-                uniqueKey: 'u_id',
-                headings: {
-                    'u_id': 'ID',
-                    'u_email': 'Email',
-                    'react_count': 'Reacts',
-                    'u_lastlogin': 'Last login',
-                },
-            },
+            users: [],
+            selectedRows: [],
+            searchField: ['u_email'],
+            searchValue: '',
+            headers: [
+                { text: "ID", value: "u_id", sortable: true, width: 80 },
+                { text: "Email", value: "u_email", sortable: true, width: 250 },
+                { text: "Reacts", value: "react_count", sortable: false, width: 100 },
+                { text: "Last Login", value: "u_lastlogin", sortable: true, width: 150 },
+                { text: "Actions", value: "actions", sortable: false, width: 120 }
+            ]
         }
     },
     computed: {
@@ -174,41 +144,47 @@ export default {
     },
     watch: {
         ug_id(newVal, oldVal) {
-            //this.load()
+            this.load()
         },
         $route(to, from) {
-            //FIXME due to keep-alive update props when inactivate component
             if (this._inactive) return;
             this.load()
+        },
+        users() {
+            this.selectedRows = [];
         }
     },
     mounted() {
-        //this.load()
+        this.load()
     },
     methods: {
-        async requestFunction(params) {
-            //TODO fix in vue-table-2?
+        formatDate,
 
-            if (this.ug_id && +this.ug_id !== 0) {
-                params.ug_id = this.ug_id
-            }
-
-            if (this.trashed) {
-                params.trashed = true
-            }
-
-            params['react_count'] = 1
-
+        async load() {
+            this.loading = true;
             try {
-                this.loading = true;
-                return await usersApi.getUsers(params)
+                const params = {
+                    limit: 1000, // Load all users for now
+                    page: 1,
+                    react_count: 1
+                };
+
+                if (this.ug_id && +this.ug_id !== 0) {
+                    params.ug_id = this.ug_id
+                }
+
+                if (this.trashed) {
+                    params.trashed = true
+                }
+
+                const response = await usersApi.getUsers(params);
+                this.users = response.data || response || [];
+            } catch (error) {
+                console.error('Error loading users:', error);
+                this.users = [];
             } finally {
                 this.loading = false;
             }
-        },
-
-        load() {
-            this.$refs.table.refresh()
         },
 
         onActionNew() {
@@ -282,8 +258,8 @@ export default {
             })
         },
 
-        onRowClick(e) {
-            this.onActionEdit([e.row])
+        onRowClick(item) {
+            this.onActionEdit([item])
         },
 
         setFilter(value) {
@@ -309,27 +285,31 @@ export default {
 </script>
 
 <style lang="scss">
-
 .users-table {
-
-    &__filter {
-        display: flex;
-    }
-
-    &__search {
-        width: 250px;
-    }
-
-    .col-u_id {
-        width: 80px;
-    }
-
-    .col-u_email {
-        max-width: 300px
-    }
-
-    .col-u_lastlogin {
-        width: 150px;
+    .users-data-table {
+        --easy-table-border: 1px solid #dee2e6;
+        --easy-table-row-border: 1px solid #dee2e6;
+        --easy-table-header-font-size: 14px;
+        --easy-table-header-height: 50px;
+        --easy-table-header-font-color: #374151;
+        --easy-table-header-background-color: #f8f9fa;
+        --easy-table-row-hover-color: rgba(0, 123, 255, 0.05);
+        --easy-table-body-row-height: 46px;
+        --easy-table-body-row-font-size: 14px;
+        --easy-table-footer-background-color: #f8f9fa;
+        --easy-table-footer-font-color: #374151;
+        --easy-table-footer-font-size: 12px;
+        --easy-table-footer-padding: 0px 10px;
+        --easy-table-footer-height: 50px;
+        --easy-table-rows-per-page-selector-width: 70px;
+        --easy-table-rows-per-page-selector-option-padding: 10px;
+        --easy-table-scrollbar-track-color: #f1f1f1;
+        --easy-table-scrollbar-color: #6b7280;
+        --easy-table-scrollbar-thumb-color: #6b7280;
+        --easy-table-scrollbar-corner-color: #f1f1f1;
+        --easy-table-loading-color: #2563eb;
+        --easy-table-empty-message-font-size: 16px;
+        --easy-table-empty-message-font-color: #6b7280;
     }
 }
 </style>

@@ -3,6 +3,9 @@
         <template slot="aside" v-if="showGroupTree">
             <user-group-tree class="mt-3"></user-group-tree>
         </template>
+
+        <!-- Main content area for child routes -->
+        <router-view></router-view>
     </app-screen>
 </template>
 
