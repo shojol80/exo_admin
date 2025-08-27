@@ -7,7 +7,7 @@ import XSwitch from '@/components/XSwitch'
 import XInput from '@/components/XInput'
 import XContextMenu from '@/components/XContextMenu'
 import XContextMenuItem from '@/components/XContextMenuItem'
-import XTree from '@/components/XTree'
+// import XTree from '@/components/XTree' // Temporarily disabled - Vue 2 liquor-tree not compatible with Vue 3
 import SelectUsergroup from '@/components/inputs/select/SelectUsergroup'
 import SelectUser from '@/components/inputs/select/SelectUser'
 import SelectEdition from '@/components/inputs/select/SelectEdition'
@@ -40,7 +40,7 @@ const Plugin = {
 
         this.installed = true
 
-        app.component('XTree', XTree)
+        // app.component('XTree', XTree) // Temporarily disabled - Vue 2 liquor-tree not compatible with Vue 3
         app.component('XSwitch', XSwitch)
         app.component('XSelect', XSelect)
         app.component('SelectUsergroup', SelectUsergroup)

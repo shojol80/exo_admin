@@ -50,4 +50,7 @@ export default {
 /*Import application styles*/
 @import 'assets/scss/style';
 
+/* Import vue3-easy-data-table styles */
+@import 'vue3-easy-data-table/dist/style.css';
+
 </style>

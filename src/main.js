@@ -2,6 +2,7 @@ import './bootstrap'
 import { createApp } from 'vue'
 import App from './App.vue'
 import iconsMapping from '@/plugins/icons/icons'
+import EasyDataTable from 'vue3-easy-data-table'
 
 import ECO, { setCurrentStore as setECOStore } from '@/plugins/ECO'
 // Fragment is now native in Vue 3 - no import needed
@@ -82,6 +83,9 @@ vueApp.config.globalProperties.$icons = iconsMapping
         vueApp.use(FormComponentsMod.default)
         vueApp.use(ActionUIMod.default)
         vueApp.use(veeValidateMod.default)
+
+        // Register EasyDataTable globally
+        vueApp.component('EasyDataTable', EasyDataTable)
 
         // Import and use router dynamically to avoid circular dependencies
         const { default: router, setCurrentStore } = await import('./router')
