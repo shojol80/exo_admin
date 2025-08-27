@@ -1,0 +1,20 @@
+.auth-card {
+    margin: 0;
+    box-shadow: 0 19px 38px rgba(#000, .30), 0 15px 12px rgba(#000, .22);
+    max-width: 430px;
+    width: 90%;
+
+    > img {
+        width: auto;
+        margin: 2rem auto;
+    }
+
+    &__code {
+        margin-bottom: 0;
+    }
+
+    &__title {
+        text-align: center;
+        font-weight: lighter;
+    }
+}

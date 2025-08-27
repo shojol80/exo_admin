@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&display=swap');
+@import "variables";
+
+html {
+    font-size: 16px;
+}
+
+.main .container-fluid {
+    padding-right: $grid-gutter-width / 2;
+    padding-left: $grid-gutter-width / 2;
+}
+
+.table-responsive {
+    overflow-x: unset;
+}
+
+.card > .tabs {
+    > div > .nav.nav-tabs {
+        padding: $card-spacer-y $card-spacer-x 0 $card-spacer-y;
+    }
+
+    > .tab-content {
+        margin-top: 0;
+        border: 0;
+
+        > .tab-pane {
+            padding: ($card-spacer-x);
+        }
+    }
+}
+
+.mode-popup .hidden-popup {
+    display: none !important;
+}
+
+.header-fixed .app-header {
+    position: fixed;
+    z-index: 1020;
+    width: 100%;
+}

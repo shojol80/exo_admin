@@ -1,0 +1,37 @@
+// Variable overrides
+$exo-bg: #eeeeee;
+
+//texts
+$exo-text-primary: #23282c;
+$exo-text-secondary: #999999;
+
+$exo-white: #e4e4e4;
+$exo-white-hover: #bdbdbd;
+$exo-gray: #404040;
+$exo-darker: #3a3a3a;
+$exo-black: #2b2b2b;
+$exo-gray-line: rgba(43, 43, 43, 0.125);
+
+$action-btn-bg-color: rgba(32, 33, 36, 0.059);
+$drop-zone-color: rgba(255, 255, 255, 0.60);
+$drop-zone-border: 2px dashed #c8ced3;
+
+//override coreUI vars
+$sidebar-bg: $exo-gray;
+
+$btn-min-width: 100px;
+
+$app-header-height: 55px;
+$popup-header-height: 55px;
+$app-screen-y-padding: 16px;
+
+$action-toolbar-height: 52px;
+$tab-toolbar-height: 43px;
+
+$rm-px-1: 16px;
+
+$slot-border-color: #bbbbbb;
+
+// Override Boostrap variables
+@import "~bootstrap/scss/mixins";
+@import "./vendors/bootstrap/variables";

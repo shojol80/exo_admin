@@ -1,0 +1,37 @@
+.multipane-resizer {
+    position: relative;
+    transition: background-color 2s;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    background-clip: padding-box;
+
+    &:after,
+    &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: rgba(0, 0, 0, .0);
+        transition: background-color 2s;
+        width: 1px;
+        height: 30px
+    }
+
+    &:hover:after,
+    &:hover:before {
+        background-color: rgba(0, 0, 0, .25)
+    }
+
+    &:hover {
+        background-color: $white
+    }
+
+    &:before {
+        transform: translateY(-50%) translateX(1px);
+
+    }
+
+    &:after {
+        transform: translateY(-50%) translateX(-1px);
+    }
+}

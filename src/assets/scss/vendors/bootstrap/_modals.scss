@@ -1,0 +1,66 @@
+.modal-iframe-full {
+    .modal-dialog {
+        height: 90%;
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 0;
+        height: 100%;
+    }
+
+    .modal-body {
+        padding: 0;
+        height: 100%;
+        overflow-y: auto;
+    }
+}
+
+.mode-popup {
+    .modal-iframe-full {
+        padding: 0 !important;
+
+        .modal-dialog {
+            max-width: none;
+            margin: 0;
+            height: 100%;
+        }
+
+        .modal-body {
+            padding: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 0.8rem;
+        }
+    }
+}
+
+.modal-min-btn {
+    .modal-footer {
+        .btn {
+            min-width: $btn-min-width;
+        }
+    }
+}
+
+.modal-header {
+    padding: $modal-header-padding;
+
+    .close {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.modal-primary .modal-header,
+.modal-success .modal-header,
+.modal-warning .modal-header,
+.modal-danger .modal-header,
+.modal-info .modal-header {
+    .close {
+        color: $white;
+    }
+}

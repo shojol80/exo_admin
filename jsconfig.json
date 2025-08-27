@@ -1,0 +1,21 @@
+{
+    "allowJs": true,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@modules/*": [
+                "./../../modules/*"
+            ],
+            "@/*": [
+                "./src/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*",
+        "tests/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

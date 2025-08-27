@@ -1,0 +1,34 @@
+// If you want to override variables do it here
+//@import "variables";
+@import "./variables";
+//import application
+@import "common";
+// Import styles
+@import "~@coreui/coreui/scss/coreui";
+
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+
+
+// If you want to add something do it here
+@import "vendors/bootstrap/modals";
+@import "vendors/bootstrap/dropdown";
+@import "vendors/bootstrap/buttons";
+@import "vendors/bootstrap/forms";
+
+@import "vendors/coreui/sidebar";
+
+@import "components/v-context";
+@import "components/x-tabs";
+@import "components/sticky-bar";
+@import "components/splitpanes";
+@import "components/app";
+@import "components/center-position";
+@import "components/auth-card";
+@import "components/key-value-list";
+@import "components/key-value";
+@import "components/v-bar";
+
+

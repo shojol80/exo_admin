@@ -1,0 +1,8 @@
+.sticky-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1020; //default 1020 but cover topbar
+    background-color: $exo-bg;
+    border-bottom: 1px solid $exo-gray-line;
+    padding: 0.5rem 0;
+}
