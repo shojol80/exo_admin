@@ -231,7 +231,7 @@ export default {
         },
         remove(row) {
             let i = this.form_permalinks.findIndex(item => item.$int_id === row.$int_id)
-            this.$set(this.form_permalinks[i], '$_deleted', 1)
+            this.form_permalinks[i].$_deleted = 1
         },
         async editLayout(row) {
             let response = await this.$dialogs.confirm({message: 'You will be redirected to another screen. All unsaved data will be lost.  Continue?'})

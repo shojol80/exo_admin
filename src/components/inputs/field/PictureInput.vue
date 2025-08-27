@@ -143,7 +143,7 @@ export default {
             },
             set(value) {
                 if (this.useCustomName) {
-                    this.$set(this.value, 'file_name', value)
+                    this.value.file_name = value
                 }
             }
         }

@@ -105,7 +105,7 @@ export default {
                 optionId: this.$route.query.option_id,
                 optionField: this.$route.query.option_field,
             }))
-            this.$set(this, 'styles_object', this.convertToObject(this.styles))
+            this.styles_object = this.convertToObject(this.styles)
         },
 
         async saveRelatedStyles() {

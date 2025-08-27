@@ -36,7 +36,7 @@ export default {
                     value = Object.assign(this.empty(), value)
                 }
                 if (!isEqual(value, this.modelValue)) {
-                    this.$set(this, 'modelValue', value)
+                    this.modelValue = value
                 }
             },
         },

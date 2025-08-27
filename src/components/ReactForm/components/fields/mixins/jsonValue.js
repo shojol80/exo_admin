@@ -31,7 +31,7 @@ export default {
                 if (value && Array.isArray(value.payload)) {
                     value.payload = {}
                 }
-                this.$set(this, 'value', value)
+                this.value = value
             },
         },
         value: {

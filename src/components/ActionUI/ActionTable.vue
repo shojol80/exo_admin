@@ -226,7 +226,7 @@ export default {
                     }
                 }
 
-                this.$set(this, "fullOptions", options);
+                this.fullOptions = options;
             }
         }
     },
