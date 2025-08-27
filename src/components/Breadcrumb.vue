@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .breadcrumb {
     background-color: $white;

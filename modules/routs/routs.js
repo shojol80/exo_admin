@@ -1,0 +1,68 @@
+export const R_LOGIN = 'R_LOGIN'
+export const R_CHANGE_PASSWORD = 'R_CHANGE_PASSWORD'
+export const R_SETUP_2FA = 'R_SETUP_2FA'
+
+export const R_APP_INIT = 'R_APP_INIT'
+
+export const R_DASHBOARD = 'R_DASHBOARD'
+
+export const R_FORMS = 'R_FORMS'
+export const R_FORMS_TABLE = 'R_FORMS_TABLE'
+export const R_FORMGROUP_EDIT = 'R_FORMGROUP_EDIT'
+export const R_FORM_EDIT = 'R_FORM_EDIT'
+
+export const R_REACTS_TABLE = 'R_REACTS_TABLE'
+export const R_REACT_EDIT = 'R_REACT_EDIT'
+export const R_REACT_SEND = 'R_REACT_SEND'
+
+export const R_SEARCH = 'R_SEARCH'
+export const R_SEARCH_SETTINGS = 'R_SEARCH_SETTINGS'
+export const R_SEARCH_CONTROLLER = 'R_SEARCH_CONTROLLER'
+export const R_SEARCH_CONTROLLER_SETTINGS = 'R_SEARCH_CONTROLLER_SETTINGS'
+
+export const R_EDITION_TABLE = 'R_EDITION_TABLE'
+export const R_EDITION_EDIT = 'R_EDITION_EDIT'
+export const R_SITE_EDIT = 'R_SITE_EDIT'
+
+export const R_CODE_EDITOR = 'R_CODE_EDITOR'
+export const R_BTNSETTINGS = 'R_BTNSETTINGS'
+
+export const R_USERS = 'R_USER'
+export const R_USERS_TABLE = 'R_USERS_TABLE'
+export const R_USER_EDIT = 'R_USER_EDIT'
+export const R_USERGROUP_EDIT = 'R_USERGROUP_EDIT'
+
+export const R_FILES = 'R_FILES'
+
+export const R_BRIDGE = 'R_BRIDGE'
+
+export const R_DOMAINS_TABLE = 'R_DOMAINS_TABLE'
+
+export const R_SITES_TABLE = 'R_SITES_TABLE'
+
+export const R_CONTROLLER = 'R_CONTROLLER'
+export const R_CONTROLLER_SETTINGS = 'R_CONTROLLER_SETTINGS'
+export const R_CONTROLLER_ADD_ITEMS = 'R_CONTROLLER_ADD_ITEMS'
+export const R_CONTROLLER_EDIT_ITEM = 'R_CONTROLLER_EDIT_ITEM'
+export const R_CONTROLLER_ACTIONS = 'R_CONTROLLER_ACTIONS'
+export const R_CONTROLLER_COMMON_SETTINGS = 'R_CONTROLLER_COMMON_SETTINGS'
+
+
+export const R_SCHEDULER_TABLE = 'R_SCHEDULER_TABLE'
+export const R_SCHEDULE_EDIT = 'R_SCHEDULE_EDIT'
+
+export const R_MAINTENANCE = 'R_MAINTENANCE'
+
+export const R_NEWSLETTERS = 'R_NEWSLETTERS'
+
+export const R_SITEMAP = 'R_SITEMAP'
+export const R_SITEMAP_TABLE = 'R_SITEMAP_TABLE'
+
+export const R_RESOURCES = 'R_RESOURCES'
+
+export const R_TINYMCE_STYLES = 'R_TINYMCE_STYLES'
+
+export const R_REACT_LAYOUT = 'R_REACT_LAYOUT'
+
+
+

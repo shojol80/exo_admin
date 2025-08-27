@@ -151,7 +151,7 @@
                  ref="modal2fa">
         </b-modal>
         <!--TODO migrate to $dialogs-->
-        <user-mailbox-aside ref="mailbox" :u_id="u_id" :u_email="user.u_email" @></user-mailbox-aside>
+        <user-mailbox-aside ref="mailbox" :u_id="u_id" :u_email="user.u_email"></user-mailbox-aside>
     </waiter>
 </template>
 

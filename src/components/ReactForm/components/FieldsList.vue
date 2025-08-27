@@ -1,7 +1,7 @@
 <template>
     <div class="field-list">
-        <template v-for="(item, index) in fields">
-            <fe-form-group :key="index">
+        <template v-for="(item, index) in fields" :key="index">
+            <fe-form-group>
                 <component :is="item.component"
                            :fq="item"
                            @change="changeValue">

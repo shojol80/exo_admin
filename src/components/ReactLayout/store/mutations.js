@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export default {
 
     setLayout(state, layout) {
@@ -29,13 +27,13 @@ export default {
     updateSlotItems(state, {slot_name, items}) {
         let template_name = state.react_layout.template_name
         if (!state.react_layout.layouts[template_name]) {
-            Vue.set(state.react_layout.layouts, template_name, {})
+            state.react_layout.layouts[template_name] = {}
         }
-        Vue.set(state.react_layout.layouts[template_name], slot_name, items)
+        state.react_layout.layouts[template_name][slot_name] = items
     },
 
     setBlocks(state, reacts) {
-        Vue.set(state, 'blocks', reacts)
+        state.blocks = reacts
     },
 
     setBusy(state, busy) {

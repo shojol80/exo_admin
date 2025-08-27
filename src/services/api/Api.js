@@ -1,12 +1,22 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
 import store from '@/store'
-import router from '@/router'
-import App from "@/main"
 import exoEventBus from "@modules/exoEventBus"
 import {R_LOGIN} from '@/router/routs'
 import {get} from "lodash";
 import isEmpty from "@modules/isEmpty";
+
+// Get current app instance and router - will be set after app is created
+let currentApp = null;
+let currentRouter = null;
+
+export function setCurrentApp(app) {
+    currentApp = app;
+}
+
+export function setCurrentRouter(router) {
+    currentRouter = router;
+}
 
 class Api {
     constructor() {
@@ -28,7 +38,9 @@ class Api {
     handleRequest(config) {
         if (!config.progress) {
             this.progress = true
-            App.$Progress.start()
+            if (currentApp && currentApp.config.globalProperties.$Progress) {
+                currentApp.config.globalProperties.$Progress.start()
+            }
             this.checkProgress()
         }
 
@@ -53,7 +65,9 @@ class Api {
         if (response.config.skipHandleResponse) return response
 
         if (!response.data.success) {
-            App.$Progress.fail()
+            if (currentApp && currentApp.config.globalProperties.$Progress) {
+                currentApp.config.globalProperties.$Progress.fail()
+            }
 
             //normalize
             response.message = response.data.error
@@ -63,8 +77,11 @@ class Api {
                 //if you ever get an unauthorized, logout the admin
                 store.dispatch('auth/logout')
                 // you can also redirect to /login if needed !
-                if (App.$route.name !== R_LOGIN) {
-                    router.push({name: R_LOGIN, params: {redir: App.$route.path}});
+                const currentRoute = currentRouter ? currentRouter.currentRoute.value : null;
+                if (currentRoute && currentRoute.name !== R_LOGIN) {
+                    if (currentRouter) {
+                        currentRouter.push({name: R_LOGIN, params: {redir: currentRoute.path}});
+                    }
                 }
 
             } else {
@@ -77,35 +94,49 @@ class Api {
             return Promise.reject(response)
         }
 
-        App.$Progress.finish()
+        if (currentApp && currentApp.config.globalProperties.$Progress) {
+            currentApp.config.globalProperties.$Progress.finish()
+        }
 
         if (response.data && response.data.info) {
             if (Array.isArray(response.data.info)) {
                 response.data.info.forEach(info => {
-                    App.$awn.info(info);
+                    if (currentApp && currentApp.config.globalProperties.$awn) {
+                        currentApp.config.globalProperties.$awn.info(info);
+                    }
                 })
             } else {
-                App.$awn.info(response.data.info);
+                if (currentApp && currentApp.config.globalProperties.$awn) {
+                    currentApp.config.globalProperties.$awn.info(response.data.info);
+                }
             }
         }
         if (response.data && response.data.warning) {
             if (Array.isArray(response.data.warning)) {
                 response.data.warning.forEach(warning => {
-                    App.$awn.warning(warning);
+                    if (currentApp && currentApp.config.globalProperties.$awn) {
+                        currentApp.config.globalProperties.$awn.warning(warning);
+                    }
                 })
             } else {
-                App.$awn.warning(response.data.warning);
+                if (currentApp && currentApp.config.globalProperties.$awn) {
+                    currentApp.config.globalProperties.$awn.warning(response.data.warning);
+                }
             }
         }
 
         if (!response.data.hasOwnProperty('data')) {
-            App.$awn.warning('API did not return data property!');
+            if (currentApp && currentApp.config.globalProperties.$awn) {
+                currentApp.config.globalProperties.$awn.warning('API did not return data property!');
+            }
         }
 
         let data = response.data.data
 
         if (data === undefined) {
-            App.$awn.warning('API returns undefined data!');
+            if (currentApp && currentApp.config.globalProperties.$awn) {
+                currentApp.config.globalProperties.$awn.warning('API returns undefined data!');
+            }
         }
 
         exoEventBus.$emit('exo-api-call:' + response.config.url.replace('/api/', ''), data)
@@ -123,14 +154,19 @@ class Api {
                     clearTimeout(me.timer);
                     me.timer = 0;
                 }
-                App.$Progress.fail()
+                if (currentApp && currentApp.config.globalProperties.$Progress) {
+                    currentApp.config.globalProperties.$Progress.fail()
+                }
             }
             if (error.response.status === 401 && error.config && !error.config.__isRetryRequest) {
                 //if you ever get an unauthorized, logout the admin
                 store.dispatch('auth/logout')
                 // you can also redirect to /login if needed !
-                if (App.$route.name !== R_LOGIN) {
-                    router.push({name: R_LOGIN, params: {redir: App.$route.path}});
+                const currentRoute = currentRouter ? currentRouter.currentRoute.value : null;
+                if (currentRoute && currentRoute.name !== R_LOGIN) {
+                    if (currentRouter) {
+                        currentRouter.push({name: R_LOGIN, params: {redir: currentRoute.path}});
+                    }
                 }
             }
             if (!error.config.preventShowError) {
@@ -145,7 +181,9 @@ class Api {
         let me = this
         me.timer = setTimeout(function () {
             if (me.progress) {
-                App.$Progress.set(10)
+                if (currentApp && currentApp.config.globalProperties.$Progress) {
+                    currentApp.config.globalProperties.$Progress.set(10)
+                }
                 me.checkProgress()
             }
         }, 6000)
@@ -155,7 +193,9 @@ class Api {
 export default new Api().service;
 
 export function catchApiError(err) {
-    App.$awn.alert(extractError(err));
+    if (currentApp && currentApp.config.globalProperties.$awn) {
+        currentApp.config.globalProperties.$awn.alert(extractError(err));
+    }
 }
 
 export function extractError(err) {

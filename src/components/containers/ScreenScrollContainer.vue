@@ -25,7 +25,7 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .screen-scroll-container {
     position: sticky;

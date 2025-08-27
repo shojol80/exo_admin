@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .block-row {
     padding-left: 2px;

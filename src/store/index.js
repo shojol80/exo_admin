@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import auth from './auth'
 import app from './app'
 import form from './form'
@@ -16,10 +15,8 @@ import reactForm from '@/components/ReactForm/store'
 import controller from '@/components/Controller/store'
 import rl from '@/components/ReactLayout/store'
 
-Vue.use(Vuex);
-
-const debug = process.env.NODE_ENV !== 'production'
-const store = new Vuex.Store({
+const debug = import.meta.env.MODE !== 'production'
+const store = createStore({
     modules: {
         auth,
         app,

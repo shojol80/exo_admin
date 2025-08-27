@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .collapse-section {
     border: 1px solid $input-border-color;

@@ -1,0 +1,17 @@
+.form-group {
+    &--input-flex .col {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.input-group {
+    .x-select {
+        flex: 1 1 auto;
+
+        > .vue-treeselect__control {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
+}

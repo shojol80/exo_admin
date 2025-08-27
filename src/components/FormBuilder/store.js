@@ -1,7 +1,7 @@
-import Vue from 'vue'
+import { reactive } from 'vue'
 import flattenTree from "@/shared/flattenTree";
 
-const store = Vue.observable({
+const store = reactive({
     form: {
         form_questions_tree: []
     },

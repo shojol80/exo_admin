@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .payload-field-header {
     padding: 0.875rem 1rem;

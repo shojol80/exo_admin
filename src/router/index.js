@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 //Routes
 import _development from '@/router/_development'
 import dashboard from '@/router/dashboard'
@@ -20,19 +19,21 @@ import maintenance from '@/router/maintenance'
 import sitemap from '@/router/sitemap'
 import layout from '@/router/layout'
 
-import store from '@/store'
 import scheduler from "@/router/scheduler";
 
-Vue.use(Router)
+// Store will be set dynamically to avoid circular dependencies
+let currentStore = null;
+export function setCurrentStore(store) {
+    currentStore = store;
+}
 
 // Containers
 const AppContainer = () => import('@/components/containers/AppContainer')
 
-const router = new Router({
-    mode: 'history',
-    base: '/exo_admin/',
+const router = createRouter({
+    history: createWebHistory('/exo_admin/'),
     linkActiveClass: 'open active',
-    scrollBehavior: () => ({y: 0}),
+    scrollBehavior: () => ({top: 0}),
     routes: [
         {
             path: '/',
@@ -80,7 +81,9 @@ const router = new Router({
 
 
 router.afterEach((to, from) => {
-    store.dispatch('breadcrumb/setByRoute', to)
+    if (currentStore) {
+        currentStore.dispatch('breadcrumb/setByRoute', to)
+    }
 })
 
 export default router;

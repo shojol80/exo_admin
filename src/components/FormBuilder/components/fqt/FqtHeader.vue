@@ -22,7 +22,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .fqt-header {
     padding: 0.5rem $list-group-item-padding-x;

@@ -1,9 +1,18 @@
-import forms from '@/services/api/forms'
+// Dynamic import to avoid circular dependencies
+let forms = null;
+const getFormsApi = async () => {
+    if (!forms) {
+        forms = (await import('@/services/api/forms')).default;
+    }
+    return forms;
+};
 
 export default {
-    load({state, commit, getters, dispatch, rootState}, {form_id}) {
-        return forms.getForm({
+    async load({state, commit, getters, dispatch, rootState}, {form_id}) {
+        const formsApi = await getFormsApi();
+        const value = await formsApi.getForm({
             form_id: form_id
-        }).then(value => commit('setForm', value))
+        });
+        commit('setForm', value)
     },
 };

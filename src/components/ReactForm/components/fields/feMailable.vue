@@ -120,7 +120,7 @@ export default {
 
 <style lang="scss">
 
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .fe-mailable {
     position: relative;

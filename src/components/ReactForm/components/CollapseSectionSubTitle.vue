@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .collapse-section-sub-title {
     font-size: 0.9rem;

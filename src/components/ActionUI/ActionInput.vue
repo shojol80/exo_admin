@@ -78,7 +78,7 @@ export default {
 
 <style scoped lang="scss">
 
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .action-input {
     position: relative;

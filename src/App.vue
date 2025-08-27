@@ -42,8 +42,8 @@ export default {
 <style lang="scss">
 
 /* Import Vendors styles*/
-@import '~bootstrap-vue/dist/bootstrap-vue.css';
-@import '~vue-awesome-notifications/dist/styles/style.scss';
+/* @import '~bootstrap-vue/dist/bootstrap-vue.css'; */
+/* @import '~vue-awesome-notifications/dist/styles/style.scss'; */
 /*Import application styles*/
 @import 'assets/scss/style';
 

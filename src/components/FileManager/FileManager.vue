@@ -149,7 +149,7 @@ export default {
 todo broke build
 */
 //@import "~plyr/src/sass/plyr.scss";
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 
 .fm {

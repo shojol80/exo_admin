@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .x-form-fieldset {
     margin-bottom: 1.25rem;

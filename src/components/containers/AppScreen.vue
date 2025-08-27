@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .app-screen {
     //padding-top: $app-screen-y-padding;

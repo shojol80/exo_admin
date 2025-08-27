@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { rgbToHex } from '@coreui/coreui/dist/js/coreui-utilities'
+/* import { rgbToHex } from '@coreui/coreui/dist/js/coreui-utilities' */
 export default {
   name: 'ColorView',
   data: function () {
@@ -24,7 +24,8 @@ export default {
   },
   computed: {
     hexColor () {
-      return rgbToHex(this.bgColor)
+      // return rgbToHex(this.bgColor)
+      return this.bgColor // Fallback until CoreUI utilities are available
     }
   },
   methods: {

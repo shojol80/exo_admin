@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .action-switch {
     color: $primary;

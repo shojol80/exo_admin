@@ -1,4 +1,4 @@
-import Vue from 'vue';
+
 export default {
     /**
      * Set config
@@ -24,7 +24,7 @@ export default {
         }
         // add new translation
         if (Object.prototype.hasOwnProperty.call(data, 'translation')) {
-            Vue.set(state.translations, data.translation.name, Object.freeze(data.translation.content));
+            state.translations[data.translation.name] = Object.freeze(data.translation.content);
         }
 
         const historyDisk = localStorage.getItem('lastSelectedDisk');

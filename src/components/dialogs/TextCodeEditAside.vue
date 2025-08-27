@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .text-code-edit-aside .x-code-editor {
     height: calc(100vh - #{$action-toolbar-height});

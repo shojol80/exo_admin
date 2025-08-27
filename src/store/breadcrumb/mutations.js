@@ -1,9 +1,8 @@
-import Vue from 'vue'
 import {merge} from 'lodash'
 
 export default {
     setList(state, list) {
-        Vue.set(state, 'list', list)
+        state.list = list
     },
 
     updateLast(state, item) {

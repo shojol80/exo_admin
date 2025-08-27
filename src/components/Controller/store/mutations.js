@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import mapItemsTree from "@modules/utils/mapItemsTree";
 
 export default {
@@ -18,7 +17,7 @@ export default {
                 ...item
             })
         )
-        Vue.set(state, 'itemsTree', itemsTreeInt)
+        state.itemsTree = itemsTreeInt
     },
 
     sortItems(state, {dir, key}) {
@@ -27,7 +26,7 @@ export default {
             if (a.react[key] > b.react[key]) return dir === 'asc' ? 1 : -1;
             return 0;
         })
-        Vue.set(state, 'itemsTree', items)
+        state.itemsTree = items
     },
 };
 

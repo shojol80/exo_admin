@@ -60,7 +60,7 @@
 
 import editor from '@/services/api/editor'
 import {get} from "lodash"
-import '../../../../exo_editor/src/exologEditor/exoTinyMCE/skins/exolog/skin.min.css'
+/* import '../../../../exo_editor/src/exologEditor/exoTinyMCE/skins/exolog/skin.min.css' */
 import draggable from 'vuedraggable'
 
 export default {

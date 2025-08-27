@@ -8,7 +8,7 @@
         <aside-panel v-model="shwoAside"
                      :hide-action-toolbar="true"
                      :hide-back-action="true">
-                <search-params v-model="value">
+                <search-params :model-value="value" @update:model-value="$emit('update:modelValue', $event)">
                     <template slot="actionBefore">
                         <action-button
                             :icon="$icons.confirm"

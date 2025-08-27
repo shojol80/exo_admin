@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 export default {
     setFromPath(state, path) {
         state.from_path = path
@@ -23,7 +21,7 @@ export default {
         state.status = 'success';
         state.error = '';
         localStorage.setItem('user', JSON.stringify(user))
-        Vue.set(state, 'user', user)
+        state.user = user
     },
 
     error(state, msg) {
@@ -34,7 +32,7 @@ export default {
     logout(state) {
         state.status = '';
         localStorage.removeItem('user')
-        Vue.set(state, 'user', {})
+        state.user = {}
     },
 
     reset(state) {

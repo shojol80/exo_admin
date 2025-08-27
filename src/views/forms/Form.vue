@@ -228,7 +228,7 @@ export default {
 
 <style lang="scss">
 
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .exolog-form {
     &__questions.tab-pane {

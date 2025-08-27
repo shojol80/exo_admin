@@ -1,7 +1,13 @@
-<template functional>
+<template>
     <b-dropdown-divider
-        v-bind="props"
-        v-on="listeners">
+        v-bind="$attrs">
         <slot></slot>
     </b-dropdown-divider>
 </template>
+
+<script>
+export default {
+    name: 'ActionDropdownDivider',
+    inheritAttrs: false
+}
+</script>

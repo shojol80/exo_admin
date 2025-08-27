@@ -1,8 +1,13 @@
-import store from '@/store'
 import {get} from 'lodash'
 
+// Store will be set dynamically to avoid circular dependencies
+let currentStore = null;
+export function setCurrentStore(store) {
+    currentStore = store;
+}
+
 const Plugin = {
-    install(Vue, options = {}) {
+    install(app, options = {}) {
         /**
          * Makes sure that plugin can be installed only once
          */
@@ -12,15 +17,15 @@ const Plugin = {
 
         this.installed = true
 
-        Vue.mixin({
+        app.mixin({
             computed: {
                 ECO() {
-                    return store.state.ECO
+                    return currentStore ? currentStore.state.ECO : {}
                 },
             },
             methods: {
                 $getECO: (path, defaultValue) => {
-                    return get(store.state.ECO, path, defaultValue)
+                    return currentStore ? get(currentStore.state.ECO, path, defaultValue) : defaultValue
                 },
             }
         })

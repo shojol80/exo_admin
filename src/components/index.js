@@ -30,7 +30,7 @@ import XVarsEditor from '@/components/Vars/XVarsEditor'
 import SkeletonConfirmDialog from '@/components/dialogs/SkeletonConfirmDialog'
 
 const Plugin = {
-    install(Vue, options = {}) {
+    install(app, options = {}) {
         /**
          * Makes sure that plugin can be installed only once
          */
@@ -40,36 +40,36 @@ const Plugin = {
 
         this.installed = true
 
-        Vue.component('XTree', XTree)
-        Vue.component('XSwitch', XSwitch)
-        Vue.component('XSelect', XSelect)
-        Vue.component('SelectUsergroup', SelectUsergroup)
-        Vue.component('SelectUser', SelectUser)
-        Vue.component('SelectEdition', SelectEdition)
-        Vue.component('SelectForm', SelectForm)
-        Vue.component('SelectView', SelectView)
-        Vue.component('SelectFormPermalink', SelectFormPermalink)
-        Vue.component('XContextMenu', XContextMenu)
-        Vue.component('XContextMenuItem', XContextMenuItem)
-        Vue.component('XInput', XInput)
-        Vue.component('InfoIcon', InfoIcon)
-        Vue.component('BreadcrumbPortal', BreadcrumbPortal)
+        app.component('XTree', XTree)
+        app.component('XSwitch', XSwitch)
+        app.component('XSelect', XSelect)
+        app.component('SelectUsergroup', SelectUsergroup)
+        app.component('SelectUser', SelectUser)
+        app.component('SelectEdition', SelectEdition)
+        app.component('SelectForm', SelectForm)
+        app.component('SelectView', SelectView)
+        app.component('SelectFormPermalink', SelectFormPermalink)
+        app.component('XContextMenu', XContextMenu)
+        app.component('XContextMenuItem', XContextMenuItem)
+        app.component('XInput', XInput)
+        app.component('InfoIcon', InfoIcon)
+        app.component('BreadcrumbPortal', BreadcrumbPortal)
 
-        Vue.component('AppScreen', AppScreen)
-        Vue.component('ScreenScrollContainer', ScreenScrollContainer)
-        Vue.component('Waiter', Waiter)
-        Vue.component('CustomParamsInput', CustomParamsInput)
-        Vue.component('XVarsEditor', XVarsEditor)
+        app.component('AppScreen', AppScreen)
+        app.component('ScreenScrollContainer', ScreenScrollContainer)
+        app.component('Waiter', Waiter)
+        app.component('CustomParamsInput', CustomParamsInput)
+        app.component('XVarsEditor', XVarsEditor)
 
-        Vue.component('ContainerInput', ContainerInput)
-        Vue.component('PictureInput', PictureInput)
-        Vue.component('UnitInput', UnitInput)
-        Vue.component('SearchParamsInput', SearchParamsInput)
+        app.component('ContainerInput', ContainerInput)
+        app.component('PictureInput', PictureInput)
+        app.component('UnitInput', UnitInput)
+        app.component('SearchParamsInput', SearchParamsInput)
 
-        Vue.component('AsidePanel', AsidePanel)
+        app.component('AsidePanel', AsidePanel)
 
         //Dialogs that call dynamically by component name
-        Vue.component('SkeletonConfirmDialog', SkeletonConfirmDialog)
+        app.component('SkeletonConfirmDialog', SkeletonConfirmDialog)
     }
 }
 

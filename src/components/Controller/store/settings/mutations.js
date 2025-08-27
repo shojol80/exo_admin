@@ -1,9 +1,7 @@
-import Vue from 'vue'
-
 export default {
     //config
     setConfig(state, value) {
-        Vue.set(state, 'config', value)
+        state.config = value
     },
 
     setName(state, value) {
@@ -31,7 +29,7 @@ export default {
     },
 
     setQBRules(state, value) {
-        Vue.set(state.config, 'QBRules', value);
+        state.config.QBRules = value;
     },
 
     addForm(state, form) {

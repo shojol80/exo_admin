@@ -53,7 +53,7 @@ import SidebarNavLink from './SidebarNavLink'
 import SidebarNavTitle from './SidebarNavTitle'
 import SidebarNavItem from './SidebarNavItem'
 import SidebarNavLabel from './SidebarNavLabel'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import VuePerfectScrollbar from '@/components/compat/VuePerfectScrollbar.vue'
 
 export default {
   name: 'SidebarNav',

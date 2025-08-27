@@ -50,8 +50,8 @@
                             </div>
                             <div class="mt-2">
                                 <p v-for="(error,index) in errors" :key="index" class="text-danger">
-                                    <template v-for="(message,index) in error">
-                                        <span :key="index">
+                                    <template v-for="(message,msgIndex) in error" :key="msgIndex">
+                                        <span>
                                         {{message}}
                                     </span><br>
                                     </template>

@@ -1,0 +1,23 @@
+.key-value {
+    border: none;
+    padding: 0.45rem 0.45rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    &__key {
+        min-width: 25%;
+        max-width: 250px;
+        padding-right: 0.5rem;
+    }
+
+    &__value {
+        flex: 1 0 auto;
+        padding-right: 0.5rem;
+    }
+
+    &__actions {
+        margin-left: auto;
+    }
+
+}

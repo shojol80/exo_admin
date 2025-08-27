@@ -143,7 +143,7 @@ export default {
 }
 </script>
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .fe-permalinks {
     .collapse-section__body {

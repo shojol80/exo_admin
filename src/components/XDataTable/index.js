@@ -1,5 +1,5 @@
-import {ClientTable, ServerTable} from 'vue-tables-2'
-import {vueTableConfig, vueTableTheme} from './configs'
+import Vue3EasyDataTable from 'vue3-easy-data-table'
+import 'vue3-easy-data-table/dist/style.css'
 
 import XDataTable from './components/XDataTable'
 import XPagination from './components/XPagination'
@@ -12,7 +12,7 @@ import XFiltersRow from './components/XFiltersRow'
 import XGenericFilter from './components/XGenericFilter'
 
 const Plugin = {
-    install(Vue, options = {}) {
+    install(app, options = {}) {
         /**
          * Makes sure that plugin can be installed only once
          */
@@ -22,23 +22,19 @@ const Plugin = {
 
         this.installed = true
 
-        const xComponents = {
-            dataTable: XDataTable,
-            perPageSelector: XPerPageSelector,
-            //dropdownPagination: XDropdownPagination,
-            pagination: XPagination,
-            tableRow: XTableRow,
-            tableBody: XTableBody,
-            tableHead: XTableHead,
-            //headingsRow: XHeadingsRow,
-            //tableHeading: XTableHeading
-            textFilter: XTextFilter,
-            //filtersRow: XFiltersRow,
-            genericFilter: XGenericFilter,
-        }
-        Vue.use(ServerTable, vueTableConfig, false, vueTableTheme, xComponents)
+        // Register Vue 3 Easy Data Table
+        app.component('EasyDataTable', Vue3EasyDataTable)
 
-        Vue.use(ClientTable, vueTableConfig, false, vueTableTheme, xComponents);
+        // Register custom components
+        app.component('XDataTable', XDataTable)
+        app.component('XPagination', XPagination)
+        app.component('XTableRow', XTableRow)
+        app.component('XTableBody', XTableBody)
+        app.component('XPerPageSelector', XPerPageSelector)
+        app.component('XTableHead', XTableHead)
+        app.component('XTextFilter', XTextFilter)
+        app.component('XFiltersRow', XFiltersRow)
+        app.component('XGenericFilter', XGenericFilter)
     }
 }
 

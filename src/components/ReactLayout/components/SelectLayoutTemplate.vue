@@ -42,7 +42,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .select-layout-template {
     display: flex;

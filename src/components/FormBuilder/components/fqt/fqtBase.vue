@@ -201,7 +201,7 @@ export default {
 
 <style lang="scss">
 
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .fqt-base {
     //border-left: 1px solid $exo-bg;

@@ -7,7 +7,7 @@ const path = require('path');
 //const target = 'https://blauwhuis.w26.exolog.net/'
 
 // Local development target - connect to your Docker setup
-const target = 'http://localhost:8084/'  // Your nginx container
+const target = 'https://anastaciatolstonog.com'  // Your nginx container
 
 module.exports = {
     lintOnSave: false,
@@ -63,7 +63,7 @@ module.exports = {
         resolve: {
             alias: {
                 //share between projects (dealer|exo_admin)
-                '@modules': path.resolve(__dirname, './../modules'),
+                '@modules': path.resolve(__dirname, './modules'),
                 '@': path.resolve(__dirname, './src'),
             }
         },

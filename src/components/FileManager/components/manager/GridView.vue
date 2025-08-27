@@ -104,7 +104,7 @@ export default {
 
 <style lang="scss">
 
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .fm-grid {
     padding-top: 1rem;

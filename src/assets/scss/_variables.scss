@@ -33,5 +33,5 @@ $rm-px-1: 16px;
 $slot-border-color: #bbbbbb;
 
 // Override Boostrap variables
-@import "~bootstrap/scss/mixins";
+@import "bootstrap/scss/mixins";
 @import "./vendors/bootstrap/variables";

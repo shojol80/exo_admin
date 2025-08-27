@@ -1,0 +1,1249 @@
+<template>
+    <treeselect
+        :class="stateClass"
+        class="x-select"
+        v-bind="$attrs"
+        v-on="$listeners"
+        :value="value"
+        :options="options"
+        :z-index="zIndex"
+        :normalizer="normalizer">
+        <slot v-for="(_, name) in $slots" :name="name" :slot="name"/>
+        <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
+            <slot :name="name" v-bind="slotData"/>
+        </template>
+    </treeselect>
+</template>
+
+<script>
+
+// import the component
+import Treeselect from '@riophae/vue-treeselect'
+// import the styles
+//import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
+export default {
+    name: 'XSelect',
+    components: {Treeselect},
+    model: {
+        prop: 'value',
+        event: 'input'
+    },
+    props: {
+        options: {
+            type: Array,
+            required: true
+        },
+        value: {
+            type: null,
+        },
+        idKey: {type: String, default: 'id'},
+        labelKey: {type: String, default: 'label'},
+        childrenKey: {type: String, default: 'children'},
+        state: {default: null},
+        zIndex: {default: 1060},
+    },
+    data() {
+        return {}
+    },
+
+    computed: {
+        stateClass() {
+            return this.state === true ? 'is-valid' : this.state === false ? 'is-invalid' : ''
+        }
+    },
+
+    methods: {
+        normalizer(node) {
+            let tNone = {
+                id: node[this.idKey],
+                label: node[this.labelKey],
+            }
+            if (node[this.childrenKey] && node[this.childrenKey].length > 0) {
+                tNone.children = node[this.childrenKey]
+            }
+            return tNone
+        },
+    }
+}
+
+</script>
+
+<style lang="less">
+/*TODO convert to SCSS
+*/
+/**
+ * Dependencies
+*/
+
+@exo-bg: #eeeeee;
+@exo-white: #e4e4e4;
+@exo-white-hover: #bdbdbd;
+@exo-gray: #404040;
+@exo-darker: #3a3a3a;
+@exo-black: #2b2b2b;
+
+@primary: #00919c;
+@secondary: #6e6e6e;
+@success: #5cb85c;
+@info: #5bc0de;
+@warning: #f0ad4e;
+@danger: #d9534f;
+
+@white: #fff;
+@gray-base: #181b1e;
+@gray-100: #f0f3f5; // lighten($gray-base, 85%);
+@gray-200: #e4e7ea; // lighten($gray-base, 80%);
+@gray-300: #c8ced3; // lighten($gray-base, 70%);
+@gray-400: #acb4bc; // lighten($gray-base, 60%);
+@gray-500: #8f9ba6; // lighten($gray-base, 50%);
+@gray-600: #73818f; // lighten($gray-base, 40%);
+@gray-700: #5c6873; // lighten($gray-base, 30%);
+@gray-800: #2f353a; // lighten($gray-base, 10%);
+@gray-900: #23282c; // lighten($gray-base, 5%);
+@black: @exo-black;
+
+@input-color: @gray-900;
+
+
+@border-radius: .25rem;
+@border-radius-sm: .2rem;
+@input-btn-padding-x: .75rem;
+
+
+@import "material-colors/dist/colors.less";
+@import "easings-css/index.less";
+
+@treeselect-checkbox-indeterminate-icon-w: 8px;
+@treeselect-checkbox-indeterminate-icon-h: 8px;
+
+@treeselect-checkbox-checked-icon-w: 8px;
+@treeselect-checkbox-checked-icon-h: 8px;
+
+/**
+ * Variables
+ */
+
+@treeselect-font-size: 1em;
+@treeselect-font-size-sm: 12px;
+@treeselect-padding: 5px;
+@treeselect-border-radius-lg: @border-radius;
+@treeselect-border-radius-sm: @border-radius-sm;
+@treeselect-narrow-cell-width: 20px;
+@treeselect-wide-cell-width: 100%;
+@treeselect-icon-size: 12px;
+@treeselect-transition-duration: 200ms;
+@treeselect-transition-duration-slow: 400ms;
+@treeselect-max-level: 8;
+
+@treeselect-control-height: 35px;
+@treeselect-control-inner-height: @treeselect-control-height - @treeselect-control-border-width * 2;
+@treeselect-control-border-width: 1px;
+@treeselect-control-border-color: @gray-400;
+@treeselect-control-border-color-hover: @gray-400;
+@treeselect-control-border-color-active: @treeselect-control-border-color-hover;
+@treeselect-control-border-color-focus: @primary;
+@treeselect-control-border-radius: @treeselect-border-radius-lg;
+@treeselect-control-bg: @white;
+@treeselect-control-box-shadow-focus: 0 0 0 .2rem rgba(@primary, .25);
+@treeselect-control-bg-disabled: #e4e7ea;
+
+@treeselect-placeholder-font-color: @gray-600;
+@treeselect-single-value-font-color: @input-color;
+@treeselect-single-value-font-color-focused: @treeselect-placeholder-font-color;
+@treeselect-multi-value-margin-x: 0;
+@treeselect-multi-value-margin-y: 2px;
+@treeselect-multi-value-padding-x: @treeselect-padding;
+@treeselect-multi-value-padding-y: 0;
+@treeselect-multi-value-font-size: @treeselect-font-size-sm;
+@treeselect-multi-value-font-color: @white;
+@treeselect-multi-value-item-bg: @primary;
+@treeselect-multi-value-item-bg-new: @success;
+@treeselect-multi-value-item-border-width: 1px;
+@treeselect-multi-value-item-border-color: transparent;
+@treeselect-multi-value-font-color-hover: @treeselect-multi-value-font-color;
+@treeselect-multi-value-item-bg-hover: @treeselect-multi-value-item-bg;
+@treeselect-multi-value-item-bg-new-hover: @treeselect-multi-value-item-bg-new;
+@treeselect-multi-value-font-color-disabled: @md-grey-600;
+@treeselect-multi-value-item-bg-disabled: @md-grey-100;
+@treeselect-multi-value-item-font-color-control-disabled: #555;
+@treeselect-multi-value-item-bg-control-disabled: #fff;
+@treeselect-multi-value-item-border-color-control-disabled: #e5e5e5;
+@treeselect-multi-value-remove-color: @treeselect-multi-value-font-color;
+@treeselect-multi-value-remove-color-hover: @gray-300;
+@treeselect-multi-value-remove-size: 6px;
+@treeselect-multi-value-divider-color: #fff;
+@treeselect-limit-tip-font-color: @md-grey-400;
+@treeselect-limit-tip-font-size: @treeselect-multi-value-font-size;
+@treeselect-limit-tip-font-weight: 600;
+@treeselect-single-input-font-size: inherit;
+@treeselect-multi-input-font-size: @treeselect-multi-value-font-size;
+
+@treeselect-menu-bg: #fff;
+@treeselect-menu-padding-y: @treeselect-padding;
+@treeselect-menu-line-height: 180%;
+@treeselect-menu-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+@treeselect-control-menu-divider-color: #f2f2f2;
+
+@treeselect-arrow-size: 9px;
+@treeselect-arrow-color: #ccc;
+@treeselect-arrow-color-hover: @md-grey-700;
+@treeselect-arrow-transition-timing-function: @ease-out-expo;
+
+@treeselect-x-size: 8px;
+@treeselect-x-color: @treeselect-arrow-color;
+@treeselect-x-color-hover: @danger;
+
+@treeselect-option-bg-highlight: @md-grey-100;
+@treeselect-option-selected-bg: @primary;
+@treeselect-option-single-selected-color: @white;
+@treeselect-option-selected-bg-hover: @treeselect-option-selected-bg;
+@treeselect-checkbox-size: @treeselect-icon-size;
+@treeselect-checkbox-border-radius: @treeselect-border-radius-sm;
+@treeselect-checkbox-color: @md-grey-300;
+@treeselect-checkbox-color-highlight: @primary;
+@treeselect-checkbox-border-color: @treeselect-checkbox-color;
+@treeselect-checkbox-bg: #fff;
+@treeselect-checkbox-border-color-hover: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-bg-hover: @treeselect-checkbox-bg;
+@treeselect-checkbox-indeterminate-border-color: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-indeterminate-bg: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-indeterminate-icon: "~@riophae/vue-treeselect/src/assets/checkbox-indeterminate.png";
+@treeselect-checkbox-indeterminate-border-color-hover: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-indeterminate-bg-hover: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-checked-border-color: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-checked-bg: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-checked-icon: "~@riophae/vue-treeselect/src/assets/checkbox-checked.png";
+@treeselect-checkbox-checked-border-color-hover: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-checked-bg-hover: @treeselect-checkbox-color-highlight;
+@treeselect-checkbox-disabled-border-color: @treeselect-checkbox-border-color;
+@treeselect-checkbox-disabled-bg-color: darken(@treeselect-checkbox-bg, 3%);
+@treeselect-checkbox-disabled-indeterminate-icon: "~@riophae/vue-treeselect/src/assets/checkbox-indeterminate-disabled.png";
+@treeselect-checkbox-disabled-checked-icon: "~@riophae/vue-treeselect/src/assets/checkbox-checked-disabled.png";
+@treeselect-option-label-color: inherit;
+@treeselect-option-label-color-disabled: rgba(0, 0, 0, 0.25);
+
+@treeselect-loader-color-dark: @md-light-blue-600;
+@treeselect-loader-color-light: @md-light-blue-100;
+@treeselect-loader-animation-duration: 1.6s;
+@treeselect-warning-icon-bg: @warning;
+@treeselect-error-icon-bg: @danger;
+@treeselect-tip-color: @md-grey-600;
+@treeselect-tip-font-size: @treeselect-font-size-sm;
+@treeselect-retry-text-color: @md-light-blue-600;
+
+
+.vue-treeselect--multi {
+    .vue-treeselect__multi-value-label {
+        white-space: normal;
+
+        .text-muted {
+            display: none;
+            color: #aebfc3 !important;
+            font-weight: normal;
+        }
+    }
+}
+
+.vue-treeselect--single {
+    .vue-treeselect__option--selected .text-muted {
+        color: white !important;
+        font-weight: normal;
+    }
+}
+
+/**
+ * Mixins
+ */
+
+.clickable() {
+    cursor: pointer;
+}
+
+.inputtable() {
+    cursor: text;
+}
+
+.forbidden() {
+    cursor: not-allowed;
+}
+
+.reset-cursor() {
+    cursor: default;
+}
+
+.rounded() {
+    border-radius: 50%;
+}
+
+.border-radius-top(@size) {
+    border-top-left-radius: @size;
+    border-top-right-radius: @size;
+}
+
+.border-radius-bottom(@size) {
+    border-bottom-left-radius: @size;
+    border-bottom-right-radius: @size;
+}
+
+.text-truncate() {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.horizontal-padding(@value) {
+    padding-left: @value;
+    padding-right: @value;
+}
+
+.vertical-padding(@value) {
+    padding-top: @value;
+    padding-bottom: @value;
+}
+
+.icon() {
+    display: block;
+    margin: auto;
+}
+
+.row() {
+    .horizontal-padding(@treeselect-padding);
+
+    display: flex;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.cell() {
+    display: flex;
+    align-items: center;
+}
+
+.wide-cell() {
+    .cell();
+    .text-truncate();
+
+    width: @treeselect-wide-cell-width;
+    padding-left: @treeselect-padding;
+}
+
+.narrow-cell() {
+    .cell();
+
+    width: @treeselect-narrow-cell-width;
+    text-align: center;
+    justify-content: center;
+    line-height: 0;
+}
+
+// based on: https://github.com/strues/retinajs/blob/master/dist/retina.less
+.retina(@path, @cap: 2) { // stylelint-disable-line selector-class-pattern
+    @lowretina: ~"(min-resolution: 1.5dppx)";
+    @2xpath: replace(@path, "(\.\w+)$", "@2x$1");
+
+    background-image: url(@path);
+
+    @media @lowretina {
+        background-image: url(@2xpath);
+    }
+
+    .create-queries() when (@cap >= 2) {
+        .loop(@env) when (@env <= @cap) {
+            @retinapath: replace(@path, "(\.\w+)$", "@@{env}x$1");
+            @media (min-resolution: @env * 96dpi) {
+                background-image: url(@retinapath);
+            }
+
+            .loop((@env + 1));
+        }
+
+        .loop(2);
+    }
+    .create-queries();
+}
+
+/**
+ * Helpers
+ */
+
+.vue-treeselect-helper-hide {
+    display: none;
+}
+
+.vue-treeselect-helper-zoom-effect-off {
+    transform: none !important; // stylelint-disable-line declaration-no-important
+}
+
+
+/**
+ * Animations
+ */
+
+@keyframes vue-treeselect-animation-fade-in {
+    0% {
+        opacity: 0;
+    }
+}
+
+@keyframes vue-treeselect-animation-bounce {
+    0%, 100% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1);
+    }
+}
+
+@keyframes vue-treeselect-animation-rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/**
+ * Transitions
+ */
+
+.vue-treeselect__multi-value-item--transition {
+    &-enter-active,
+    &-leave-active {
+        transition-duration: @treeselect-transition-duration;
+        transition-property: transform, opacity;
+    }
+
+    &-enter-active {
+        transition-timing-function: @ease-out-circ;
+    }
+
+    &-leave-active {
+        transition-timing-function: @ease-out-cubic;
+        // trigger animation when element is removed
+        position: absolute;
+    }
+
+    &-enter,
+    &-leave-to {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    &-move {
+        transition: @treeselect-transition-duration transform @ease-out-quart;
+    }
+}
+
+.vue-treeselect__menu--transition {
+    &-enter-active,
+    &-leave-active {
+        // to be overriden
+    }
+
+    &-enter,
+    &-leave-to {
+        // to be overriden
+    }
+}
+
+.vue-treeselect__list--transition {
+    &-enter-active,
+    &-leave-active {
+        // to be overriden
+    }
+
+    &-enter,
+    &-leave-to {
+        // to be overriden
+    }
+}
+
+
+/**
+ * Namespace
+ */
+
+.vue-treeselect {
+    position: relative;
+    text-align: left;
+
+    div,
+    span {
+        box-sizing: border-box;
+    }
+
+    svg {
+        fill: currentColor;
+    }
+}
+
+
+/**
+ * Control
+ */
+
+.vue-treeselect__control {
+    //.row();
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    min-height: @treeselect-control-height;
+    border: @treeselect-control-border-width solid @treeselect-control-border-color;
+    border-radius: @treeselect-control-border-radius;
+    background: @treeselect-control-bg;
+    transition-duration: @treeselect-transition-duration;
+    transition-property: border-color, box-shadow, width, height, background-color, opacity;
+    transition-timing-function: @ease-out-cubic;
+
+    /*        .vue-treeselect:not(.vue-treeselect--disabled):not(.vue-treeselect--focused) &:hover {
+                border-color: @treeselect-control-border-color-hover;
+            }*/
+
+    .vue-treeselect--focused:not(.vue-treeselect--open) & {
+        border-color: @treeselect-control-border-color-focus;
+        box-shadow: @treeselect-control-box-shadow-focus;
+    }
+
+    .vue-treeselect--disabled & {
+        background-color: @treeselect-control-bg-disabled;
+    }
+
+    .vue-treeselect--open & {
+        border-color: @treeselect-control-border-color-active;
+    }
+
+    .vue-treeselect--open.vue-treeselect--open-below & {
+        .border-radius-bottom(0);
+    }
+
+    .vue-treeselect--open.vue-treeselect--open-above & {
+        .border-radius-top(0);
+    }
+}
+
+.vue-treeselect__value-container,
+.vue-treeselect__multi-value {
+    width: 100%;
+    vertical-align: middle;
+}
+
+.vue-treeselect__value-container {
+    //display: table-cell;
+    height: 100%;
+    position: relative;
+
+    .vue-treeselect--searchable:not(.vue-treeselect--disabled) & {
+        // The real input is small and not covering the whole control.
+        // We show an I-shape cursor to give user a hint that
+        // clicking anywhere in the control will make the input focused.
+        .inputtable();
+    }
+}
+
+.vue-treeselect__multi-value {
+    display: inline-block;
+    .horizontal-padding(@input-btn-padding-x);
+
+    .vue-treeselect--has-value & {
+        //margin-bottom: @treeselect-padding;
+    }
+}
+
+.vue-treeselect__placeholder,
+.vue-treeselect__single-value {
+    .text-truncate();
+    .horizontal-padding(@input-btn-padding-x);
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    line-height: @treeselect-control-inner-height;
+    user-select: none;
+    pointer-events: none;
+}
+
+.vue-treeselect__placeholder {
+    color: @treeselect-placeholder-font-color;
+}
+
+.vue-treeselect__single-value {
+    color: @treeselect-single-value-font-color;
+
+    .vue-treeselect--focused.vue-treeselect--searchable & {
+        color: @treeselect-single-value-font-color-focused;
+    }
+}
+
+.vue-treeselect__multi-value-item-container {
+    display: inline-block;
+    padding-top: @treeselect-padding;
+    padding-right: @treeselect-padding;
+    vertical-align: top;
+}
+
+.vue-treeselect__multi-value-item {
+    .clickable();
+
+    display: inline-table;
+    background: @treeselect-multi-value-item-bg;
+    // Table elements do not have margin, so we set at the container element.
+    padding: @treeselect-multi-value-margin-y @treeselect-multi-value-margin-x;
+    border: @treeselect-multi-value-item-border-width solid @treeselect-multi-value-item-border-color;
+    border-radius: @treeselect-border-radius-sm;
+    color: @treeselect-multi-value-font-color;
+    font-size: @treeselect-multi-value-font-size;
+    vertical-align: top; // stylelint-disable-line plugin/declaration-block-no-ignored-properties
+
+    .vue-treeselect:not(.vue-treeselect--disabled) &:not(.vue-treeselect__multi-value-item-disabled):hover &:not(.vue-treeselect__multi-value-item-new) &:not(.vue-treeselect__multi-value-item-new):hover {
+        .clickable();
+
+        background: @treeselect-multi-value-item-bg-hover;
+        color: @treeselect-multi-value-font-color-hover;
+    }
+
+    &.vue-treeselect__multi-value-item-disabled {
+        .reset-cursor();
+
+        background: @treeselect-multi-value-item-bg-disabled;
+        color: @treeselect-multi-value-font-color-disabled;
+    }
+
+    .vue-treeselect--disabled & {
+        .reset-cursor();
+
+        background: @treeselect-multi-value-item-bg-control-disabled;
+        border-color: @treeselect-multi-value-item-border-color-control-disabled;
+        color: @treeselect-multi-value-item-font-color-control-disabled;
+    }
+
+    &.vue-treeselect__multi-value-item-new {
+        background: @treeselect-multi-value-item-bg-new;
+
+        &:hover {
+            background: @treeselect-multi-value-item-bg-new;
+        }
+    }
+}
+
+.vue-treeselect__value-remove,
+.vue-treeselect__multi-value-label {
+    display: table-cell;
+    padding: @treeselect-multi-value-padding-y @treeselect-multi-value-padding-x;
+    vertical-align: middle;
+}
+
+.vue-treeselect__value-remove {
+    color: @treeselect-multi-value-remove-color;
+    padding-left: @treeselect-multi-value-padding-x;
+    border-left: 1px solid @treeselect-multi-value-divider-color;
+    line-height: 0;
+
+    .vue-treeselect__multi-value-item:hover & {
+        color: @treeselect-multi-value-remove-color-hover;
+    }
+
+    .vue-treeselect--disabled &,
+    .vue-treeselect__multi-value-item-disabled & {
+        display: none;
+    }
+
+    > svg {
+        width: @treeselect-multi-value-remove-size;
+        height: @treeselect-multi-value-remove-size;
+    }
+}
+
+.vue-treeselect__multi-value-label {
+    padding-right: @treeselect-multi-value-padding-x;
+    white-space: pre-line;
+    user-select: none;
+}
+
+.vue-treeselect__limit-tip {
+    display: inline-block;
+    padding-top: @treeselect-padding;
+    padding-right: @treeselect-padding;
+    vertical-align: top;
+}
+
+.vue-treeselect__limit-tip-text {
+    .reset-cursor();
+
+    display: block;
+    margin: @treeselect-multi-value-margin-y @treeselect-multi-value-margin-x;
+    padding: (@treeselect-multi-value-padding-y + @treeselect-multi-value-item-border-width) 0;
+    color: @treeselect-limit-tip-font-color;
+    font-size: @treeselect-limit-tip-font-size;
+    font-weight: @treeselect-limit-tip-font-weight;
+}
+
+.vue-treeselect__input-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 100%;
+    min-height: @treeselect-control-inner-height;
+    outline: none;
+
+    .vue-treeselect--single & {
+        font-size: @treeselect-single-input-font-size;
+        height: 100%;
+    }
+
+    .vue-treeselect--searchable & {
+        .horizontal-padding(@input-btn-padding-x);
+    }
+
+    .vue-treeselect--multi & {
+        display: inline-block;
+        font-size: @treeselect-multi-input-font-size;
+        vertical-align: top;
+        padding: 0;
+    }
+
+    .vue-treeselect--searchable.vue-treeselect--multi.vue-treeselect--has-value & {
+        padding-top: 0;
+        padding-left: 0;
+    }
+
+    .vue-treeselect--disabled & {
+        //display: none;
+    }
+}
+
+.vue-treeselect__input,
+.vue-treeselect__sizer {
+    margin: 0;
+    line-height: inherit;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.vue-treeselect__input {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    box-sizing: content-box;
+    box-shadow: none;
+    background: none transparent;
+    line-height: 1;
+    vertical-align: middle;
+
+    &::-ms-clear {
+        display: none;
+    }
+
+    .vue-treeselect--single & {
+        width: 100%;
+        height: 100%;
+    }
+
+    .vue-treeselect--multi & {
+        .vertical-padding(0);
+        height: @treeselect-control-inner-height;
+    }
+
+    .vue-treeselect--has-value & {
+        line-height: inherit;
+        vertical-align: top;
+    }
+}
+
+.vue-treeselect__sizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    height: 0;
+    overflow: scroll;
+    white-space: pre;
+}
+
+.vue-treeselect__x-container {
+    .narrow-cell();
+    .clickable();
+
+    color: @treeselect-x-color;
+    animation: @treeselect-transition-duration vue-treeselect-animation-fade-in @ease-out-circ;
+
+    &:hover {
+        color: @treeselect-x-color-hover;
+    }
+}
+
+.vue-treeselect__x {
+    width: @treeselect-x-size;
+    height: @treeselect-x-size;
+}
+
+.vue-treeselect__control-arrow-container {
+    .narrow-cell();
+    .clickable();
+
+    .vue-treeselect--disabled & {
+        .reset-cursor();
+    }
+}
+
+.vue-treeselect__control-arrow {
+    width: @treeselect-arrow-size;
+    height: @treeselect-arrow-size;
+    color: @treeselect-arrow-color;
+
+    .vue-treeselect:not(.vue-treeselect--disabled) .vue-treeselect__control-arrow-container:hover & {
+        color: @treeselect-arrow-color-hover;
+    }
+
+    .vue-treeselect--disabled & {
+        opacity: 0.35;
+    }
+}
+
+.vue-treeselect__control-arrow--rotated {
+    transform: rotateZ(180deg);
+}
+
+
+/**
+ * Menu
+ */
+
+.vue-treeselect__menu-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: visible;
+    transition: 0s;
+
+    .vue-treeselect--open-below:not(.vue-treeselect--append-to-body) & {
+        top: 100%;
+    }
+
+    .vue-treeselect--open-above:not(.vue-treeselect--append-to-body) & {
+        bottom: 100%;
+    }
+}
+
+.vue-treeselect__menu {
+    .reset-cursor(); // set to normal cursor since text is unselectable
+    .vertical-padding(@treeselect-menu-padding-y);
+
+    display: block;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: auto;
+    // IE9 does not properly handle `width: 100%` with scrollbar when `box-sizing: border-box`
+    width: 100%;
+    border: 1px solid @treeselect-control-border-color-active;
+    background: @treeselect-menu-bg;
+    line-height: @treeselect-menu-line-height;
+    // https://css-tricks.com/snippets/css/momentum-scrolling-on-ios-overflow-elements/
+    -webkit-overflow-scrolling: touch;
+
+    .vue-treeselect--open-below & {
+        .border-radius-bottom(@treeselect-border-radius-lg);
+
+        top: 0;
+        margin-top: (-@treeselect-control-border-width);
+        border-top-color: @treeselect-control-menu-divider-color;
+        box-shadow: @treeselect-menu-box-shadow;
+    }
+
+    .vue-treeselect--open-above & {
+        .border-radius-top(@treeselect-border-radius-lg);
+
+        bottom: 0;
+        margin-bottom: (-@treeselect-control-border-width);
+        border-bottom-color: @treeselect-control-menu-divider-color;
+    }
+}
+
+.generate-level-indentations(@i) when (@i >= 0) {
+    .generate-level-indentations((@i - 1));
+
+    .vue-treeselect__indent-level-@{i} {
+        .vue-treeselect__option {
+            padding-left: @treeselect-padding + @i * @treeselect-narrow-cell-width;
+        }
+
+        .vue-treeselect__tip {
+            padding-left: @treeselect-padding + (@i + 1) * @treeselect-narrow-cell-width;
+        }
+    }
+}
+
+.generate-level-indentations(@treeselect-max-level);
+
+.vue-treeselect__option {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    .row();
+}
+
+.vue-treeselect__option--highlight {
+    background: @treeselect-option-bg-highlight;
+}
+
+.vue-treeselect__option--selected {
+    // note that these should override `.vue-treeselect__option--highlight`
+    .vue-treeselect--single & {
+        background: @treeselect-option-selected-bg;
+        font-weight: 600;
+        color: @treeselect-option-single-selected-color;;
+
+        &:hover {
+            background: @treeselect-option-selected-bg-hover;
+        }
+    }
+}
+
+.vue-treeselect__option--hide {
+    display: none;
+}
+
+.vue-treeselect__option-arrow-container,
+.vue-treeselect__option-arrow-placeholder {
+    .narrow-cell();
+}
+
+.vue-treeselect__option-arrow-container {
+    .clickable();
+}
+
+.vue-treeselect__option-arrow {
+    display: inline-block;
+    width: @treeselect-arrow-size;
+    height: @treeselect-arrow-size;
+    color: @treeselect-arrow-color;
+    vertical-align: middle;
+    transition: @treeselect-transition-duration transform @treeselect-arrow-transition-timing-function;
+    transform: rotateZ(-90deg);
+
+    .vue-treeselect__option-arrow-container:hover &,
+    .vue-treeselect--branch-nodes-disabled .vue-treeselect__option:hover & {
+        color: @treeselect-arrow-color-hover;
+    }
+}
+
+.vue-treeselect__option-arrow--rotated {
+    transform: rotateZ(0);
+
+    &.vue-treeselect__option-arrow--prepare-enter {
+        transform: rotateZ(-90deg) !important; // stylelint-disable-line declaration-no-important
+    }
+}
+
+.vue-treeselect__label-container {
+    .cell();
+    .clickable();
+
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    color: @treeselect-option-label-color;
+
+    .vue-treeselect__option--disabled & {
+        .forbidden();
+
+        color: @treeselect-option-label-color-disabled;
+    }
+}
+
+.vue-treeselect__checkbox-container {
+    display: table-cell;
+    width: @treeselect-narrow-cell-width;
+    min-width: @treeselect-narrow-cell-width;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.vue-treeselect__checkbox {
+    display: block;
+    margin: auto;
+    width: @treeselect-checkbox-size;
+    height: @treeselect-checkbox-size;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: @treeselect-border-radius-sm;
+    position: relative;
+    transition: @treeselect-transition-duration all @ease-out-circ;
+}
+
+.vue-treeselect__check-mark,
+.vue-treeselect__minus-mark {
+    display: block;
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: @treeselect-transition-duration all ease;
+}
+
+.vue-treeselect__minus-mark {
+    width: @treeselect-checkbox-indeterminate-icon-w;
+    height: @treeselect-checkbox-indeterminate-icon-h;
+    // Svg icons are rendered differently in different browsers thus unacceptable.
+    // Png provides the best consistency with a drawback that
+    // its color can't be controlled by CSS.
+    .retina(@treeselect-checkbox-indeterminate-icon, 3);
+    background-size: @treeselect-checkbox-indeterminate-icon-w @treeselect-checkbox-indeterminate-icon-h;
+
+    .vue-treeselect__checkbox--indeterminate > & {
+        opacity: 1;
+    }
+
+    .vue-treeselect__checkbox--disabled & {
+        .retina(@treeselect-checkbox-disabled-indeterminate-icon, 3);
+    }
+}
+
+.vue-treeselect__check-mark {
+    width: @treeselect-checkbox-checked-icon-w;
+    height: @treeselect-checkbox-checked-icon-h;
+    .retina(@treeselect-checkbox-checked-icon, 3);
+    background-size: @treeselect-checkbox-checked-icon-w @treeselect-checkbox-checked-icon-h;
+    // Set initial height to 1px.
+    transform: scaleY(1 / unit(@treeselect-checkbox-checked-icon-h));
+
+    .vue-treeselect__checkbox--checked > & {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+
+    .vue-treeselect__checkbox--disabled & {
+        .retina(@treeselect-checkbox-disabled-checked-icon, 3);
+    }
+}
+
+.vue-treeselect__checkbox--unchecked {
+    border-color: @treeselect-checkbox-border-color;
+    background: @treeselect-checkbox-bg;
+
+    .vue-treeselect__label-container:hover & {
+        border-color: @treeselect-checkbox-border-color-hover;
+        background: @treeselect-checkbox-bg-hover;
+    }
+}
+
+.vue-treeselect__checkbox--indeterminate {
+    border-color: @treeselect-checkbox-indeterminate-border-color;
+    background: @treeselect-checkbox-indeterminate-bg;
+
+    .vue-treeselect__label-container:hover & {
+        border-color: @treeselect-checkbox-indeterminate-border-color-hover;
+        background: @treeselect-checkbox-indeterminate-bg-hover;
+    }
+}
+
+.vue-treeselect__checkbox--checked {
+    border-color: @treeselect-checkbox-checked-border-color;
+    background: @treeselect-checkbox-checked-bg;
+
+    .vue-treeselect__label-container:hover & {
+        border-color: @treeselect-checkbox-checked-border-color-hover;
+        background: @treeselect-checkbox-checked-bg-hover;
+    }
+}
+
+.vue-treeselect__checkbox--disabled {
+    border-color: @treeselect-checkbox-disabled-border-color;
+    background-color: @treeselect-checkbox-disabled-bg-color;
+
+    .vue-treeselect__label-container:hover & {
+        border-color: @treeselect-checkbox-disabled-border-color;
+        background-color: @treeselect-checkbox-disabled-bg-color;
+    }
+}
+
+
+.vue-treeselect__label {
+    .text-truncate();
+
+    display: table-cell;
+    padding-left: @treeselect-padding;
+    max-width: 100%;
+    vertical-align: middle;
+    cursor: inherit; // override user agent style
+
+    .vue-treeselect--single & {
+        padding-left: calc(1rem - @treeselect-padding * 2);
+    }
+}
+
+.vue-treeselect__count {
+    margin-left: @treeselect-padding;
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+.vue-treeselect__tip {
+    .row();
+
+    color: @treeselect-tip-color;
+}
+
+.vue-treeselect__tip-text {
+    .wide-cell();
+
+    font-size: @treeselect-tip-font-size;
+}
+
+.vue-treeselect__retry {
+    .vue-treeselect__error-tip & {
+        .clickable();
+
+        margin-left: @treeselect-padding;
+        font-style: normal;
+        font-weight: 600;
+        text-decoration: none;
+        color: @treeselect-retry-text-color;
+    }
+}
+
+.vue-treeselect__icon-container {
+    .narrow-cell();
+
+    .vue-treeselect--single & {
+        padding-left: @treeselect-padding;
+    }
+}
+
+.vue-treeselect__icon-warning {
+    .icon();
+    .rounded();
+
+    position: relative;
+    width: @treeselect-icon-size;
+    height: @treeselect-icon-size;
+    background: @treeselect-warning-icon-bg;
+
+    &::after {
+        display: block;
+        position: absolute;
+        content: "";
+        left: 5px;
+        top: 2.5px;
+        width: 2px;
+        height: 1px;
+        border: 0 solid #fff;
+        border-top-width: 5px;
+        border-bottom-width: 1px;
+    }
+}
+
+.vue-treeselect__icon-error {
+    .icon();
+    .rounded();
+
+    @stroke-length: 6px;
+
+    position: relative;
+    width: @treeselect-icon-size;
+    height: @treeselect-icon-size;
+    background: @treeselect-error-icon-bg;
+
+    &::before,
+    &::after {
+        display: block;
+        position: absolute;
+        content: "";
+        background: #fff;
+        transform: rotate(45deg);
+    }
+
+    &::before {
+        width: @stroke-length;
+        height: 2px;
+        left: 3px;
+        top: 5px;
+    }
+
+    &::after {
+        width: 2px;
+        height: @stroke-length;
+        left: 5px;
+        top: 3px;
+    }
+}
+
+.vue-treeselect__icon-loader {
+    .icon();
+
+    position: relative;
+    width: @treeselect-icon-size;
+    height: @treeselect-icon-size;
+    text-align: center;
+    animation: @treeselect-loader-animation-duration vue-treeselect-animation-rotate linear infinite;
+
+    &::before,
+    &::after {
+        .rounded();
+
+        position: absolute;
+        content: "";
+        left: 0;
+        top: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        opacity: 0.6;
+        animation: @treeselect-loader-animation-duration vue-treeselect-animation-bounce ease-in-out infinite;
+    }
+
+    &::before {
+        background: @treeselect-loader-color-dark;
+    }
+
+    &::after {
+        background: @treeselect-loader-color-light;
+        animation-delay: -(@treeselect-loader-animation-duration / 2);
+    }
+}
+
+
+/**
+ * Menu Portal
+ */
+
+.vue-treeselect__menu-placeholder {
+    display: none;
+}
+
+.vue-treeselect__portal-target {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    height: 0;
+    width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+
+.x-select.is-invalid .vue-treeselect__control {
+    border-color: @danger;
+}
+
+.x-select.is-valid .vue-treeselect__control {
+    border-color: @success;
+}
+
+.was-validated .x-select:invalid ~ .invalid-feedback,
+.was-validated .x-select:invalid ~ .invalid-tooltip,
+.x-select.is-invalid ~ .invalid-feedback,
+.x-select.is-invalid ~ .invalid-tooltip {
+    display: block;
+}
+
+</style>

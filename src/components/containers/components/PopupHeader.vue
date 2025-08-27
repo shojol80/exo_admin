@@ -52,7 +52,7 @@ export default {
 
 <style lang="scss">
 
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .popup-header {
     padding: 0 15px;

@@ -1,5 +1,4 @@
 import isEmpty from '@modules/isEmpty'
-import Vue from "vue";
 
 export default {
     /**
@@ -15,12 +14,12 @@ export default {
                 formconf: {}
             }
         }
-        Vue.set(state, 'form', form)
+        state.form = form
     },
 
     setErrors(state, {error = null, errors = {}}) {
         state.error = error
-        Vue.set(state, 'errors', errors)
+        state.errors = errors
     },
 
     setQuestionValue(state, {fq_id, value}) {
@@ -31,7 +30,7 @@ export default {
         state.form.formconf.react_edition_id = react_edition_id
     },
     useAsHomepage(state, value = true) {
-        Vue.set(state.form.formconf, 'use_as_homepage', value)
+        state.form.formconf.use_as_homepage = value
     },
     set_react_form_permalink_id(state, value) {
         if (isEmpty(value)) value = null

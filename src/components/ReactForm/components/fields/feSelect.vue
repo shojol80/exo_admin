@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .fe-select {
     .vue-treeselect__control {

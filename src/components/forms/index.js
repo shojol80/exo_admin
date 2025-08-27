@@ -11,7 +11,7 @@ import XFormRadioGroup from '@/components/forms/XFormRadioGroup'
 
 
 const Plugin = {
-    install(Vue, options = {}) {
+    install(app, options = {}) {
         /**
          * Makes sure that plugin can be installed only once
          */
@@ -21,16 +21,16 @@ const Plugin = {
 
         this.installed = true
 
-        Vue.component('XFormGroup', XFormGroup)
-        Vue.component('XFormInput', XFormInput)
-        Vue.component('XFormTextArea', XFormTextArea)
-        Vue.component('XFormSwitch', XFormSwitch)
-        Vue.component('XFormSelect', XFormSelect)
-        Vue.component('XFormPassword', XFormPassword)
-        Vue.component('XFormControlSwitch', XFormControlSwitch)
-        Vue.component('XFormFieldset', XFormFieldset)
-        Vue.component('XFormDateTime', XFormDateTime)
-        Vue.component('XFormRadioGroup', XFormRadioGroup)
+        app.component('XFormGroup', XFormGroup)
+        app.component('XFormInput', XFormInput)
+        app.component('XFormTextArea', XFormTextArea)
+        app.component('XFormSwitch', XFormSwitch)
+        app.component('XFormSelect', XFormSelect)
+        app.component('XFormPassword', XFormPassword)
+        app.component('XFormControlSwitch', XFormControlSwitch)
+        app.component('XFormFieldset', XFormFieldset)
+        app.component('XFormDateTime', XFormDateTime)
+        app.component('XFormRadioGroup', XFormRadioGroup)
     }
 }
 
