@@ -2,15 +2,12 @@
 //@import "variables";
 @import "./variables";
 //import application
-@import "common";
+@import "_common";
+
 // Import styles
-/* @import "~@coreui/coreui/scss/coreui"; */
+@import "@coreui/coreui/scss/coreui";
 
-$fa-font-path: '@fortawesome/fontawesome-free/webfonts';
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "@fortawesome/fontawesome-free/scss/regular";
-@import "@fortawesome/fontawesome-free/scss/solid";
-
+// FontAwesome imports temporarily disabled for debugging
 
 // If you want to add something do it here
 @import "vendors/bootstrap/modals";
@@ -18,7 +15,9 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import "vendors/bootstrap/buttons";
 @import "vendors/bootstrap/forms";
 
-@import "vendors/coreui/sidebar";
+// FontAwesome imports temporarily disabled for debugging
+
+@import "vendors/coreui/_sidebar";
 
 @import "components/v-context";
 @import "components/x-tabs";

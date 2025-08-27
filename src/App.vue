@@ -23,6 +23,9 @@ export default {
     created() {
         if (window !== window.parent) {
             this.$store.dispatch('app/screenMode', {mode: 'POPUP'})
+        } else {
+            // Ensure fullscreen mode is properly initialized with body classes
+            this.$store.dispatch('app/screenMode', {mode: 'FULLSCREEN'})
         }
     },
     mounted() {

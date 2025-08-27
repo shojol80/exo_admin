@@ -1,10 +1,12 @@
 <template>
     <app-screen class="animated fadeIn">
-        <b-row class="mt-3">
-            <b-col sm="6" md="3">
-                <version-info></version-info>
-            </b-col>
-        </b-row>
+        <div class="container-fluid mt-3">
+            <div class="row g-3">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <version-info />
+                </div>
+            </div>
+        </div>
         <!--<div class="container-fluid my-5">
             <b-row class="justify-content-center">
                 <b-col cols="6">
