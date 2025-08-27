@@ -1,5 +1,6 @@
 <template>
-    <div class="editions-table">
+    <app-screen>
+        <div class="editions-table">
         <waiter ref="tableWaiter" :show="loading">
             <!-- Action Toolbar -->
             <div class="mb-3">
@@ -93,8 +94,11 @@
                     </div>
                 </template>
             </EasyDataTable>
+
+
         </waiter>
-    </div>
+        </div>
+    </app-screen>
 </template>
 
 <script>
