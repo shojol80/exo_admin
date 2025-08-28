@@ -10,6 +10,46 @@
             </div>
         </div>
 
+        <!-- Search and pagination controls -->
+        <div
+            class="d-flex justify-content-between align-items-center mb-3"
+            v-if="fullOptions.useFilterSearchQuery || fullOptions.usePagination"
+        >
+            <div
+                class="VueTables__search"
+                v-if="fullOptions.useFilterSearchQuery"
+            >
+                <div class="VueTables__search-field">
+                    <label>Search:</label>
+                    <input
+                        type="text"
+                        class="form-control form-control-sm ml-2"
+                        style="width: 250px"
+                        v-model="searchQuery"
+                        @input="onSearch"
+                        placeholder="Search..."
+                    />
+                </div>
+            </div>
+            <div class="VueTables__limit" v-if="fullOptions.usePagination">
+                <div class="VueTables__limit-field">
+                    <label>Show:</label>
+                    <select
+                        class="form-control form-control-sm ml-2"
+                        style="width: auto"
+                        v-model="perPage"
+                        @change="onPerPageChange"
+                    >
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span class="ml-2">entries</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Table -->
         <div class="action-table action-table--sticky" :class="classObject">
             <div class="table-responsive">
@@ -43,7 +83,7 @@
                             </td>
                         </tr>
                         <tr
-                            v-for="(item, index) in data"
+                            v-for="(item, index) in paginatedData"
                             :key="index"
                             @click="onRowClick(item)"
                         >
@@ -71,6 +111,83 @@
                 </table>
             </div>
         </div>
+
+        <!-- Pagination -->
+        <div
+            class="d-flex justify-content-between align-items-center mt-3"
+            v-if="fullOptions.usePagination && totalPages > 1"
+        >
+            <div class="VueTables__pagination-info">
+                Showing {{ startRecord }} to {{ endRecord }} of
+                {{ totalRecords }} entries
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li
+                        class="page-item"
+                        :class="{ disabled: currentPage === 1 }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click.prevent="goToPage(1)"
+                            :disabled="currentPage === 1"
+                            >First</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        :class="{ disabled: currentPage === 1 }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click.prevent="goToPage(currentPage - 1)"
+                            :disabled="currentPage === 1"
+                            >Previous</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        v-for="page in visiblePages"
+                        :key="page"
+                        :class="{ active: page === currentPage }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click.prevent="goToPage(page)"
+                            >{{ page }}</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        :class="{ disabled: currentPage === totalPages }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click.prevent="goToPage(currentPage + 1)"
+                            :disabled="currentPage === totalPages"
+                            >Next</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        :class="{ disabled: currentPage === totalPages }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click.prevent="goToPage(totalPages)"
+                            :disabled="currentPage === totalPages"
+                            >Last</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
         <x-context-menu ref="menu" tag="div">
             <template #default="child">
                 <slot name="contextmenu" v-bind="child.data"></slot>
@@ -112,6 +229,9 @@ export default {
             selected: [],
             selectAll: false,
             loading: false,
+            searchQuery: "",
+            currentPage: 1,
+            perPage: 25,
             fullOptions: {
                 filterableColumns: [],
                 useFilterSearchQuery: false,
@@ -189,6 +309,46 @@ export default {
                 this.data.length > 0 &&
                 this.selected.length === this.data.length
             );
+        },
+        filteredData() {
+            if (!this.searchQuery) return this.data;
+            return this.data.filter((item) => {
+                return Object.values(item).some((value) =>
+                    String(value)
+                        .toLowerCase()
+                        .includes(this.searchQuery.toLowerCase())
+                );
+            });
+        },
+        paginatedData() {
+            if (!this.fullOptions.usePagination) return this.filteredData;
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = start + this.perPage;
+            return this.filteredData.slice(start, end);
+        },
+        totalRecords() {
+            return this.filteredData.length;
+        },
+        totalPages() {
+            return Math.ceil(this.totalRecords / this.perPage);
+        },
+        startRecord() {
+            return this.totalRecords === 0
+                ? 0
+                : (this.currentPage - 1) * this.perPage + 1;
+        },
+        endRecord() {
+            const end = this.currentPage * this.perPage;
+            return end > this.totalRecords ? this.totalRecords : end;
+        },
+        visiblePages() {
+            const pages = [];
+            const start = Math.max(1, this.currentPage - 2);
+            const end = Math.min(this.totalPages, this.currentPage + 2);
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+            return pages;
         },
     },
     watch: {
@@ -375,6 +535,17 @@ export default {
                     item[this.fullOptions.uniqueKey] ===
                     row[this.fullOptions.uniqueKey]
             );
+        },
+        onSearch() {
+            this.currentPage = 1; // Reset to first page when searching
+        },
+        onPerPageChange() {
+            this.currentPage = 1; // Reset to first page when changing per page
+        },
+        goToPage(page) {
+            if (page >= 1 && page <= this.totalPages) {
+                this.currentPage = page;
+            }
         },
     },
     created() {
