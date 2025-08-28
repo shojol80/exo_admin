@@ -16,6 +16,7 @@
 <script>
 import { R_EDITION_EDIT, R_EDITION_TABLE, R_SITE_EDIT } from "@/router/routs";
 import editions from "@/services/api/editions";
+import exoEventBus from "@modules/exoEventBus";
 
 export default {
     name: "PageGroupTree",

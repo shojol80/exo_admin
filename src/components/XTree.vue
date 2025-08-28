@@ -1,130 +1,148 @@
 <template>
-    <tree class="x-tree"
-          :data="data"
-          :options="options"
-          ref="refTree"
-          @node:selected="onNodeSelected"
-          @node:clicked="onClicked">
-        <div slot-scope="{ node }" class="node-container">
-            <div v-show="node.data.icon" class="node-icon">
-                <i :class="node.data.icon" aria-hidden="true"></i>
-            </div>
-            <div class="node-text">{{ node.text }}</div>
-            <ul class="node-controls" v-if="node.states.menu!==false">
-                <slot name="actions"></slot>
-                <action-dropdown :icon="$icons.more" right variant="white" :boundary="'viewport'">
-                    <template slot="dropdown">
-                        <action-dropdown-item
-                            @click.prevent.stop="editNode(node)"
-                            v-show="node.states.editable!==false"
-                            :icon="$icons.edit">Edit
-                        </action-dropdown-item>
-                        <action-dropdown-item
-                            @click.prevent.stop="deleteNode(node)"
-                            v-show="node.states.deleteble!==false"
-                            :icon="$icons.delete">Remove
-                        </action-dropdown-item>
-                        <action-dropdown-item
-                            @click.prevent.stop="addChildNode(node)"
-                            v-show="node.states.append!==false"
-                            :icon="$icons.add">Add child
-                        </action-dropdown-item>
-                        <template v-if="node.id>0">
-                            <action-dropdown-divider></action-dropdown-divider>
+    <tree
+        class="x-tree"
+        :data="data"
+        :options="options"
+        ref="refTree"
+        @node:selected="onNodeSelected"
+        @node:clicked="onClicked"
+    >
+        <template v-slot="{ node }">
+            <div class="node-container">
+                <div v-show="node.data.icon" class="node-icon">
+                    <i :class="node.data.icon" aria-hidden="true"></i>
+                </div>
+                <div class="node-text">{{ node.text }}</div>
+                <ul class="node-controls" v-if="node.states.menu !== false">
+                    <slot name="actions"></slot>
+                    <action-dropdown
+                        :icon="$icons.more"
+                        right
+                        variant="white"
+                        :boundary="'viewport'"
+                    >
+                        <template #dropdown>
                             <action-dropdown-item
-                                @click.prevent.stop="void 0"
-                                :icon="$icons.info">Id:{{ node.id }}
+                                @click.prevent.stop="editNode(node)"
+                                v-show="node.states.editable !== false"
+                                :icon="$icons.edit"
+                                >Edit
                             </action-dropdown-item>
+                            <action-dropdown-item
+                                @click.prevent.stop="deleteNode(node)"
+                                v-show="node.states.deleteble !== false"
+                                :icon="$icons.delete"
+                                >Remove
+                            </action-dropdown-item>
+                            <action-dropdown-item
+                                @click.prevent.stop="addChildNode(node)"
+                                v-show="node.states.append !== false"
+                                :icon="$icons.add"
+                                >Add child
+                            </action-dropdown-item>
+                            <template v-if="node.id > 0">
+                                <action-dropdown-divider></action-dropdown-divider>
+                                <action-dropdown-item
+                                    @click.prevent.stop="void 0"
+                                    :icon="$icons.info"
+                                    >Id:{{ node.id }}
+                                </action-dropdown-item>
+                            </template>
                         </template>
-                    </template>
-                </action-dropdown>
-            </ul>
-        </div>
+                    </action-dropdown>
+                </ul>
+            </div>
+        </template>
     </tree>
 </template>
 
 <script>
-
-import LiquorTree from 'liquor-tree'
+import LiquorTree from "liquor-tree";
 
 export default {
     name: "XTree",
     components: {
-        [LiquorTree.name]: LiquorTree
+        [LiquorTree.name]: LiquorTree,
     },
     props: {
         data: Array,
-        options: Object
+        options: Object,
     },
 
     data() {
-        return {}
+        return {};
     },
 
     watch: {
         data: {
             immediate: false,
             handler(newVal) {
-                if (newVal) this.$refs.refTree.tree.setModel(newVal)
-            }
-        }
+                if (newVal) this.$refs.refTree.tree.setModel(newVal);
+            },
+        },
     },
     computed: {
         //proxy ref to parent
         tree() {
-            return this.$refs.refTree.tree
-        }
+            return this.$refs.refTree.tree;
+        },
     },
     mounted() {
-        this.$refs.refTree.$on('node:editing:start', (node) => {
-        })
-
-        this.$refs.refTree.$on('node:editing:stop', (node, isTextChanged) => {
-            this.$emit('edit', node)
-        })
+        // For Vue 3 compatibility, we'll handle events differently
+        // The liquor-tree library may need to be updated for full Vue 3 support
+        this.$nextTick(() => {
+            if (this.$refs.refTree && this.$refs.refTree.$on) {
+                this.$refs.refTree.$on("node:editing:start", (node) => {});
+                this.$refs.refTree.$on(
+                    "node:editing:stop",
+                    (node, isTextChanged) => {
+                        this.$emit("edit", node);
+                    }
+                );
+            }
+        });
     },
     methods: {
         editNode(node) {
             if (!!this.options.customNodeEdit) {
-                this.$emit('edit', node)
+                this.$emit("edit", node);
             } else {
-                node.startEditing()
+                node.startEditing();
             }
         },
 
         deleteNode(node) {
-            this.$emit('delete', node)
+            this.$emit("delete", node);
         },
 
         addChildNode(node) {
-            this.$emit('add', node)
+            this.$emit("add", node);
         },
 
         onNodeSelected(node) {
-            this.$emit('select', node)
+            this.$emit("select", node);
         },
 
         selectAndExpand(node) {
-            if (!node) return
-            node.select()
-            this.expandAll(node)
+            if (!node) return;
+            node.select();
+            this.expandAll(node);
         },
 
         expandAll(node) {
-            if (!node) return
-            node.expand()
-            this.expandAll(node.parent)
+            if (!node) return;
+            node.expand();
+            this.expandAll(node.parent);
         },
 
         onClicked(node) {
-            this.$emit('click', node)
+            this.$emit("click", node);
             if (node.states.expanded) {
-                node.toggleExpand()
+                node.toggleExpand();
             }
         },
-    }
-}
-
+    },
+};
 </script>
 
 <style lang="scss">
@@ -132,7 +150,7 @@ export default {
 
 .x-tree {
     &.tree {
-        overflow: visible
+        overflow: visible;
     }
 
     > ul.tree-root,
@@ -152,7 +170,6 @@ export default {
             //overflow: hidden;
             //transition: color 0.05s ease-in-out, background-color 0.05s ease-in-out
         }
-
     }
 
     .tree-node.selected > .tree-content {
@@ -165,10 +182,12 @@ export default {
         > .tree-arrow {
             &:after {
                 border-color: $white;
-                transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+                transition: color 0.15s ease-in-out,
+                    background-color 0.15s ease-in-out,
+                    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+                    -webkit-box-shadow 0.15s ease-in-out;
             }
         }
-
     }
 
     .tree-arrow.has-child:after {
@@ -225,7 +244,6 @@ export default {
             box-shadow: -8px 0 10px -6px $secondary;
             list-style: none;
         }
-
     }
 
     .tree-content:hover {
@@ -235,6 +253,4 @@ export default {
         }
     }
 }
-
-
 </style>

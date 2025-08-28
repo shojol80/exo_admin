@@ -53,6 +53,7 @@
         "laravel-js-str": "github:kalex375/laravel-js-str",
         "less": "^4.2.0",
         "less-loader": "^11.1.0",
+        "liquor-tree": "^0.2.70",
         "lodash": "^4.17.21",
         "qrcode": "^1.5.3",
         "splitpanes": "^3.1.5",
