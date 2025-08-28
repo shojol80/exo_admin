@@ -1,10 +1,10 @@
-import './bootstrap'
-import { createApp } from 'vue'
-import App from './App.vue'
-import iconsMapping from '@/plugins/icons/icons'
-import EasyDataTable from 'vue3-easy-data-table'
+import "./bootstrap";
+import { createApp } from "vue";
+import App from "./App.vue";
+import iconsMapping from "@/plugins/icons/icons";
+import EasyDataTable from "vue3-easy-data-table";
 
-import ECO, { setCurrentStore as setECOStore } from '@/plugins/ECO'
+import ECO, { setCurrentStore as setECOStore } from "@/plugins/ECO";
 // Fragment is now native in Vue 3 - no import needed
 // VueShortkey will be replaced with @vueuse/core
 // import VueShortkey from 'vue-shortkey'
@@ -23,9 +23,9 @@ import ECO, { setCurrentStore as setECOStore } from '@/plugins/ECO'
 // PortalVue is now native Teleport in Vue 3 - no import needed
 
 // Create Vue 3 app
-const vueApp = createApp(App)
+const vueApp = createApp(App);
 // Provide $icons early as a safe fallback to avoid undefined during initial renders
-vueApp.config.globalProperties.$icons = iconsMapping
+vueApp.config.globalProperties.$icons = iconsMapping;
 
 // Use plugins and components
 // PortalVue is now native Teleport in Vue 3 - no plugin needed
@@ -53,68 +53,88 @@ vueApp.config.globalProperties.$icons = iconsMapping
 // })
 
 // Bootstrap after store is initialized to avoid TDZ/circular issues
-;(async () => {
+(async () => {
     try {
-        const { default: store } = await import('./store');
+        const { default: store } = await import("./store");
 
         // Use store first
-        vueApp.use(store)
+        vueApp.use(store);
 
         // Set store reference in ECO plugin after store is initialized
-        setECOStore(store)
+        setECOStore(store);
 
         // Use ECO only after store is set
-        vueApp.use(ECO)
+        vueApp.use(ECO);
 
         // Load and use UI plugins dynamically to avoid circular import/TDZ
-        const [bootstrapVueNextMod, iconsMod, DialogsMod, ComponentsMod, ActionUIMod, FormComponentsMod, veeValidateMod] = await Promise.all([
-            import('bootstrap-vue-next'),
-            import('@/plugins/icons'),
-            import('@modules/dialogs'),
-            import('@/components'),
-            import('@/components/ActionUI'),
-            import('@/components/forms'),
-            import('@modules/veeValidate'),
-        ])
-        vueApp.use(bootstrapVueNextMod.default)
-        vueApp.use(iconsMod.default)
-        vueApp.use(DialogsMod.default)
-        vueApp.use(ComponentsMod.default)
-        vueApp.use(FormComponentsMod.default)
-        vueApp.use(ActionUIMod.default)
-        vueApp.use(veeValidateMod.default)
+        const [
+            bootstrapVueNextMod,
+            iconsMod,
+            DialogsMod,
+            ComponentsMod,
+            ActionUIMod,
+            FormComponentsMod,
+            veeValidateMod,
+        ] = await Promise.all([
+            import("bootstrap-vue-next"),
+            import("@/plugins/icons"),
+            import("@modules/dialogs"),
+            import("@/components"),
+            import("@/components/ActionUI"),
+            import("@/components/forms"),
+            import("@modules/veeValidate"),
+        ]);
+        vueApp.use(bootstrapVueNextMod.default);
+        vueApp.use(iconsMod.default);
+        vueApp.use(DialogsMod.default);
+        vueApp.use(ComponentsMod.default);
+        vueApp.use(FormComponentsMod.default);
+        vueApp.use(ActionUIMod.default);
+        vueApp.use(veeValidateMod.default);
 
-        // Register EasyDataTable globally
-        vueApp.component('EasyDataTable', EasyDataTable)
+        // Register EasyDataTable globally with Vue 2 compatible names
+        vueApp.component("EasyDataTable", EasyDataTable);
+        vueApp.component("v-server-table", EasyDataTable);
+        vueApp.component("v-client-table", EasyDataTable);
 
         // Import and use router dynamically to avoid circular dependencies
-        const { default: router, setCurrentStore } = await import('./router')
+        const { default: router, setCurrentStore } = await import("./router");
         // Set store reference in router
-        setCurrentStore(store)
+        setCurrentStore(store);
         // Use router
-        vueApp.use(router)
+        vueApp.use(router);
 
         // Mount the app ASAP
-        vueApp.mount('#app')
+        vueApp.mount("#app");
 
         // Post-mount setup (do not block UI)
         Promise.allSettled([
-            import('@/services/api/Api').then(({ setCurrentApp, setCurrentRouter, setCurrentStore: setApiStore }) => {
-                setCurrentApp(vueApp)
-                setCurrentRouter(router)
-                setApiStore(store)
-            }),
-            import('@/router/helpers').then(({ setCurrentStore: setHelpersStore }) => {
-                setHelpersStore(store)
+            import("@/services/api/Api").then(
+                ({
+                    setCurrentApp,
+                    setCurrentRouter,
+                    setCurrentStore: setApiStore,
+                }) => {
+                    setCurrentApp(vueApp);
+                    setCurrentRouter(router);
+                    setApiStore(store);
+                }
+            ),
+            import("@/router/helpers").then(
+                ({ setCurrentStore: setHelpersStore }) => {
+                    setHelpersStore(store);
+                }
+            ),
+        ])
+            .then(() => {
+                console.log("Post-mount setup completed");
             })
-        ]).then(() => {
-            console.log('Post-mount setup completed')
-        }).catch((e) => {
-            console.error('Post-mount setup error', e)
-        })
+            .catch((e) => {
+                console.error("Post-mount setup error", e);
+            });
     } catch (error) {
-        console.error('App bootstrap failed:', error)
+        console.error("App bootstrap failed:", error);
     }
 })();
 
-export default vueApp
+export default vueApp;

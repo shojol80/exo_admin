@@ -1,81 +1,59 @@
 <template>
     <div>
-        <component
-            v-bind:is="tableComponent"
-            ref="table"
-            v-bind="$attrs"
-            v-on="$listeners"
-            :data="data"
-            @input="$emit('input', $event)"
-            :options="fullOptions"
-            :columns="columns"
-            debounce="5000"
-            class="action-table action-table--sticky"
-            :class="classObject"
-            @loaded="onDataLoaded"
-            @row-contextmenu="onContextMenu">
-            <slot v-for="(_, name) in $slots" :name="name" :slot="name"/>
-            <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-                <slot :name="name" v-bind="slotData"/>
-            </template>
-            <template #afterFilterWrapper>
-                <action-group class="ml-2">
-                    <template v-if="options.useFilterByColumn">
-                        <action-button v-if="!hasSlot('filterDropdown')"
-                                       :active="showFilters_val"
-                                       @action="switchColumnFilters(!showFilters_val)"
-                                       title="Filters by columns"
-                                       :icon="$icons.filter">
-                        </action-button>
-                        <action-dropdown v-else
-                                         split
-                                         :active="showFilters_val"
-                                         @action="switchColumnFilters(!showFilters_val)"
-                                         title="Filters by columns"
-                                         :icon="$icons.filter">
-                            <template #dropdown>
-                                <slot name="filterDropdown"></slot>
-                            </template>
-                        </action-dropdown>
-                    </template>
-
-
-                </action-group>
-                <slot name="afterFilterWrapper">
-                </slot>
-            </template>
-            <div slot="actions" class="action-table__actions">
-                <slot name="actions" v-bind="{ rows: selected, data: data}"></slot>
+        <!-- Actions toolbar -->
+        <div class="action-table__toolbar mb-3" v-if="$slots.actions">
+            <div class="action-table__actions">
+                <slot
+                    name="actions"
+                    v-bind="{ rows: selected, data: data }"
+                ></slot>
             </div>
-            <template #h__col-check>
-                <b-form-checkbox
-                    @change="onSelectAll"
-                    v-model="selectAll"
-                ></b-form-checkbox>
-            </template>
-            <template #col-check="props">
-                <div
-                    class="custom-control custom-checkbox"
-                    @click.stop="void 0"
-                    @dblclick.stop="void 0"
-                >
-                    <input
-                        type="checkbox"
-                        autocomplete="off"
-                        class="custom-control-input"
-                        :value="props.row"
-                        :id="'chk_' + props.row[options.uniqueKey]"
-                        v-model="selected"
-                    />
-                    <label
-                        class="custom-control-label"
-                        :for="'chk_' + props.row[options.uniqueKey]"
-                    ></label>
-                </div>
-            </template>
-        </component>
+        </div>
+
+        <!-- Table -->
+        <div class="action-table action-table--sticky" :class="classObject">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th v-for="column in columns" :key="column">
+                                {{ fullOptions.headings[column] || column }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="!data || data.length === 0">
+                            <td :colspan="columns.length" class="text-center">
+                                <div class="p-4">
+                                    <i
+                                        class="fa fa-spinner fa-spin"
+                                        v-if="loading"
+                                    ></i>
+                                    <span v-else>No data available</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr
+                            v-for="(item, index) in data"
+                            :key="index"
+                            @click="onRowClick(item)"
+                        >
+                            <td v-for="column in columns" :key="column">
+                                <slot
+                                    :name="column"
+                                    :row="item"
+                                    :value="item[column]"
+                                >
+                                    {{ item[column] }}
+                                </slot>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <x-context-menu ref="menu" tag="div">
-            <template slot-scope="child">
+            <template #default="child">
                 <slot name="contextmenu" v-bind="child.data"></slot>
             </template>
         </x-context-menu>
@@ -83,7 +61,7 @@
 </template>
 
 <script>
-import {merge} from "lodash";
+import { merge } from "lodash";
 import hasSlots from "@modules/mixins/HasSlots";
 
 export default {
@@ -96,27 +74,25 @@ export default {
         columns: Array,
         tableType: {
             type: String,
-            default: "client"
+            default: "client",
         },
         hoverRow: {
             type: Boolean,
-            default: true
+            default: true,
         },
         skin: {
             type: String,
-            default: ""
+            default: "",
         },
     },
-    model: {
-        prop: "data",
-        event: "input"
-    },
+    emits: ["input", "row-click", "loaded"],
     data() {
         return {
             showFilters_val: false,
             headerIsSticky: false,
             selected: [],
             selectAll: false,
+            loading: false,
             fullOptions: {
                 filterableColumns: [],
                 useFilterSearchQuery: false,
@@ -128,29 +104,29 @@ export default {
                 skin: "table table-borderless table-sm",
                 headings: {
                     "col-edit": "",
-                    "col-action": ""
+                    "col-action": "",
                 },
                 columnsClasses: {
                     "col-check": "action-table__col-check",
                     "col-edit": "action-table__col-edit",
-                    "col-action": "action-table__col-action"
+                    "col-action": "action-table__col-action",
                 },
                 texts: {
-                    filter: ""
-                }
-            }
+                    filter: "",
+                },
+            },
         };
     },
     computed: {
         hasSlots() {
-            return hasSlots
+            return hasSlots;
         },
         classObject() {
             let cl = {
                 "action-table--hover": this.hoverRow,
-                "action-table--row-pointer": !!this.$listeners["row-click"],
+                "action-table--row-pointer": !!this.$attrs["onRow-click"],
                 "action-table--sticky-fly": this.headerIsSticky,
-                "action-table--no-header": this.fullOptions.hideHeader
+                "action-table--no-header": this.fullOptions.hideHeader,
             };
             if (this.skin) {
                 cl[`action-table--skin-${this.skin}`] = true;
@@ -160,11 +136,32 @@ export default {
         tableComponent() {
             return `v-${this.tableType}-table`;
         },
+        easyDataTableHeaders() {
+            // Convert Vue 2 columns to EasyDataTable headers
+            return this.columns.map((col) => {
+                if (typeof col === "string") {
+                    return {
+                        text: this.fullOptions.headings[col] || col,
+                        value: col,
+                        sortable: true,
+                    };
+                }
+                return col;
+            });
+        },
+        serverOptions() {
+            return {
+                page: 1,
+                itemsPerPage: 25,
+                sortBy: [],
+                sortType: [],
+            };
+        },
         modelData() {
             return this.tableType === "client"
                 ? this.data
                 : this.$refs.table.data;
-        }
+        },
     },
     watch: {
         selected(newVal) {
@@ -202,33 +199,33 @@ export default {
                 }
                 if (newVal.useFilterSearchQuery || newVal.useFilterByColumn) {
                     if (newVal.useFilterByColumn && this.showFilters_val) {
-                        options.filterByColumn = true
-                        options.filterable = newVal.filterableColumns
+                        options.filterByColumn = true;
+                        options.filterable = newVal.filterableColumns;
                     } else if (newVal.useFilterSearchQuery) {
-                        options.filterable = true
-                        options.filterByColumn = false
+                        options.filterable = true;
+                        options.filterByColumn = false;
                     } else {
-                        options.filterByColumn = false
+                        options.filterByColumn = false;
                     }
                 } else {
-                    options.filterable = false
+                    options.filterable = false;
                     this.showFilters_val = false;
                 }
 
                 options.requestAdapter = (data) => {
                     if (newVal.filterableColumns) {
-                        data.filterableColumns = newVal.filterableColumns
+                        data.filterableColumns = newVal.filterableColumns;
                     }
                     if (newVal.requestAdapter) {
-                        return newVal.requestAdapter(data)
+                        return newVal.requestAdapter(data);
                     } else {
-                        return data
+                        return data;
                     }
-                }
+                };
 
                 this.fullOptions = options;
-            }
-        }
+            },
+        },
     },
     methods: {
         onContextMenu(e) {
@@ -237,7 +234,7 @@ export default {
             if (this.selected.length > 0) {
                 rows = this.selected;
             }
-            this.$refs.menu.open(e.event, {rows});
+            this.$refs.menu.open(e.event, { rows });
         },
         onSelectAll(checked) {
             if (checked) {
@@ -249,8 +246,42 @@ export default {
         onDataLoaded() {
             this.selected = [];
         },
+        onRowClick(item) {
+            this.$emit("row-click", item);
+        },
+        onServerOptionsUpdate(options) {
+            // Handle server options update for EasyDataTable
+            console.log("Server options updated:", options);
+        },
         refresh() {
-            this.$refs.table.refresh(...arguments);
+            // For EasyDataTable, we need to trigger data reload
+            if (
+                this.tableType === "server" &&
+                this.fullOptions.requestFunction
+            ) {
+                this.loadServerData();
+            } else if (this.$refs.table && this.$refs.table.refresh) {
+                this.$refs.table.refresh(...arguments);
+            }
+        },
+        async loadServerData() {
+            try {
+                if (this.fullOptions.requestFunction) {
+                    const params = {
+                        page: 1,
+                        limit: 25,
+                        // Add any other parameters needed
+                    };
+                    const result = await this.fullOptions.requestFunction(
+                        params
+                    );
+                    // Update the data
+                    this.$emit("input", result.data || result || []);
+                    this.$emit("loaded", result);
+                }
+            } catch (error) {
+                console.error("Error loading server data:", error);
+            }
         },
         setLimit(recordsPerPage) {
             this.$refs.table.setLimit(recordsPerPage);
@@ -265,32 +296,32 @@ export default {
         },
         emptyFilter() {
             return this.options.filterableColumns.reduce((filter, field) => {
-                filter[field] = ''
-                return filter
-            }, {})
+                filter[field] = "";
+                return filter;
+            }, {});
         },
 
         fullFilter() {
             return this.options.filterableColumns.reduce((filter, field) => {
                 //place to set outer filter
                 //[field] = this.filter[field] ? this.filter[field] : ''
-                filter[field] = ''
-                return filter
-            }, {})
+                filter[field] = "";
+                return filter;
+            }, {});
         },
 
         switchColumnFilters(enable) {
             this.showFilters_val = enable;
             if (this.showFilters_val) {
-                this.fullOptions.filterByColumn = true;
+                this.fullOptions.useFilterByColumn = true;
                 this.fullOptions.filterable = this.options.filterableColumns;
                 this.setFilter(this.fullFilter());
             } else {
-                this.fullOptions.filterByColumn = false;
+                this.fullOptions.useFilterByColumn = false;
                 this.fullOptions.filterable = this.options.useFilterSearchQuery;
                 this.setFilter(this.emptyFilter());
             }
-        }
+        },
     },
     created() {
         if (
@@ -303,27 +334,35 @@ export default {
     mounted() {
         this.$nextTick(() => {
             //to check when header get's position sticky
-            this.observer = new IntersectionObserver(
-                entries => {
-                    // no intersection
-                    if (entries[0].intersectionRatio < 1)
-                        this.headerIsSticky = true;
-                    // fully intersects
-                    else if (entries[0].intersectionRatio === 1)
-                        this.headerIsSticky = false;
-                },
-                {
-                    threshold: [0, 1]
-                }
-            );
-            this.observer.observe(this.$el.querySelector(".VueTables__top"));
+            const targetElement =
+                this.$el.querySelector(".VueTables__top") ||
+                this.$el.querySelector(".easy-data-table") ||
+                this.$el.querySelector("table") ||
+                this.$el;
+
+            if (targetElement) {
+                this.observer = new IntersectionObserver(
+                    (entries) => {
+                        // no intersection
+                        if (entries[0].intersectionRatio < 1)
+                            this.headerIsSticky = true;
+                        // fully intersects
+                        else if (entries[0].intersectionRatio === 1)
+                            this.headerIsSticky = false;
+                    },
+                    {
+                        threshold: [0, 1],
+                    }
+                );
+                this.observer.observe(targetElement);
+            }
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.observer) {
             this.observer.disconnect();
         }
-    }
+    },
 };
 </script>
 
@@ -416,8 +455,8 @@ export default {
         tbody tr {
             &:hover {
                 box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0,
-                0 1px 2px 0 rgba(60, 64, 67, 0.3),
-                0 1px 3px 1px rgba(60, 64, 67, 0.15);
+                    0 1px 2px 0 rgba(60, 64, 67, 0.3),
+                    0 1px 3px 1px rgba(60, 64, 67, 0.15);
             }
         }
     }
@@ -487,16 +526,16 @@ export default {
                     height: 6px;
                     background: transparent;
                     background: -webkit-gradient(
-                            linear,
-                            left top,
-                            left bottom,
-                            from(rgba(0, 0, 0, 0.14)),
-                            to(transparent)
+                        linear,
+                        left top,
+                        left bottom,
+                        from(rgba(0, 0, 0, 0.14)),
+                        to(transparent)
                     );
                     background: linear-gradient(
-                            180deg,
-                            rgba(0, 0, 0, 0.14) 0,
-                            transparent
+                        180deg,
+                        rgba(0, 0, 0, 0.14) 0,
+                        transparent
                     );
                     right: 0;
                 }

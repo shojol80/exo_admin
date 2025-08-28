@@ -7,13 +7,14 @@
             @click="onClick"
             @add="onAdd"
             @edit="onEdit"
-            @delete="onDelete">
+            @delete="onDelete"
+        >
         </x-tree>
     </waiter>
 </template>
 
 <script>
-import {R_EDITION_EDIT, R_EDITION_TABLE, R_SITE_EDIT} from "@/router/routs"
+import { R_EDITION_EDIT, R_EDITION_TABLE, R_SITE_EDIT } from "@/router/routs";
 import editions from "@/services/api/editions";
 
 export default {
@@ -23,33 +24,37 @@ export default {
             tree: [],
             options: {
                 customNodeEdit: true,
-            }
-        }
+            },
+        };
     },
     watch: {
-        '$route'(to, from) {
-            this.selectByRoute()
-        }
+        $route(to, from) {
+            this.selectByRoute();
+        },
     },
     mounted() {
         this.load();
-        exoEventBus.$on('exo-api-call:editions/saveEdition', this.load)
-        exoEventBus.$on('exo-api-call:editions/deleteEdition', this.load)
-        exoEventBus.$on('exo-api-call:editions/setDefaultEdition', this.load)
+        exoEventBus.$on("exo-api-call:editions/saveEdition", this.load);
+        exoEventBus.$on("exo-api-call:editions/deleteEdition", this.load);
+        exoEventBus.$on("exo-api-call:editions/setDefaultEdition", this.load);
     },
     methods: {
         load() {
-            editions.getExoAdminTree()
-                .then(data => this.tree = data)
-                .then(this.selectByRoute)
+            editions
+                .getExoAdminTree()
+                .then((data) => (this.tree = data))
+                .then(this.selectByRoute);
         },
         onAdd(node) {
-            node.select()
+            node.select();
             switch (node.data.type) {
-                case 'root':
-                    this.$router.push({name: R_EDITION_EDIT, params: {e_id: 'new'}})
-                    break
-                case 'edition':
+                case "root":
+                    this.$router.push({
+                        name: R_EDITION_EDIT,
+                        params: { e_id: "new" },
+                    });
+                    break;
+                case "edition":
                     /*this.$router.push({
                         name: R_PAGEGROUP_EDIT,
                         params: {
@@ -57,105 +62,108 @@ export default {
                             e_id: this.getParentEdition(node),
                         }
                     })*/
-                    break
+                    break;
             }
         },
 
         onEdit(node) {
-            node.select()
+            node.select();
             switch (node.data.type) {
-                case 'root':
+                case "root":
                     this.$router.push({
-                        name: R_SITE_EDIT
-                    })
-                    break
-                case 'edition':
-                    this.$router.push({name: R_EDITION_EDIT, params: {e_id: node.id}})
-                    break
+                        name: R_SITE_EDIT,
+                    });
+                    break;
+                case "edition":
+                    this.$router.push({
+                        name: R_EDITION_EDIT,
+                        params: { e_id: node.id },
+                    });
+                    break;
             }
         },
 
         async onDelete(node) {
             let response = await this.$dialogs.confirmDelete({
-                title: 'Delete',
-                message: `Are you sure want to delete ${node.data.type} "${node.data.text}"?`
-            })
-            if (response.trigger !== 'ok') return
+                title: "Delete",
+                message: `Are you sure want to delete ${node.data.type} "${node.data.text}"?`,
+            });
+            if (response.trigger !== "ok") return;
 
-
-            node.hide()
+            node.hide();
             switch (node.data.type) {
-                case 'edition':
-                    this.$refs.waiter.wait(editions.deleteEdition({e_id: node.id}))
+                case "edition":
+                    this.$refs.waiter.wait(
+                        editions.deleteEdition({ e_id: node.id })
+                    );
                     //if deleted item was select in tree go to common view
-                    if (this.$route.name === R_EDITION_EDIT && +this.$route.params.e_id === +node.id) {
-                        this.$router.replace({name: R_EDITION_TABLE})
+                    if (
+                        this.$route.name === R_EDITION_EDIT &&
+                        +this.$route.params.e_id === +node.id
+                    ) {
+                        this.$router.replace({ name: R_EDITION_TABLE });
                     }
                     break;
             }
-
         },
 
         onClick(node) {
             switch (node.data.type) {
-                case 'root':
+                case "root":
                     this.$router.push({
-                        name: R_EDITION_TABLE
-                    })
-                    break
-                case 'edition':
+                        name: R_EDITION_TABLE,
+                    });
+                    break;
+                case "edition":
                     this.$router.push({
                         name: R_EDITION_EDIT,
                         params: {
                             e_id: node.id,
-                        }
-                    })
-                    break
+                        },
+                    });
+                    break;
             }
         },
 
         getParentEdition(node) {
-            if (node.data.type === 'edition') return node.id
-            if (!node.parent) return null
-            if (node.parent.data.type === 'edition') return node.parent.id
-            else return this.getParentEdition(node.parent)
+            if (node.data.type === "edition") return node.id;
+            if (!node.parent) return null;
+            if (node.parent.data.type === "edition") return node.parent.id;
+            else return this.getParentEdition(node.parent);
         },
 
         selectByRoute() {
             this.$nextTick(() => {
-                let tree = this.$refs.xtree.tree
-                if (tree.selected().length > 0) return
-                let nodes = []
+                let tree = this.$refs.xtree?.tree;
+                if (!tree || !tree.selected || tree.selected().length > 0)
+                    return;
+                let nodes = [];
 
                 if (this.$route.params.pagegroup_id > 0) {
                     nodes = tree.find({
                         id: this.$route.params.pagegroup_id,
                         data: {
-                            type: 'pagegroup'
-                        }
-                    })
+                            type: "pagegroup",
+                        },
+                    });
                 } else {
                     nodes = tree.find({
                         id: this.$route.params.e_id,
-                        data: {type: 'edition'}
-                    })
+                        data: { type: "edition" },
+                    });
                 }
 
                 if (!nodes || nodes.length === 0) {
-                    nodes = tree.find({data: {type: 'root'}})
+                    nodes = tree.find({ data: { type: "root" } });
                 }
 
                 if (nodes && nodes.length > 0) {
-                    this.$refs.xtree.selectAndExpand(nodes[0])
+                    this.$refs.xtree.selectAndExpand(nodes[0]);
                 }
-            })
-        }
+            });
+        },
     },
-
-
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
