@@ -3,31 +3,60 @@
         <div class="btn-settings">
             <waiter ref="waiter">
                 <div class="btn-settings__toolbar">
-                    <draggable v-model="toolbarBtns"
-                               v-bind="dragOptions"
-                               @end="onEndMove"
-                               class="toolbar">
-                        <div v-for="code in toolbarBtns" :key="code"
-                             :class="{'toolbar-btn':true,'toolbar-btn--text':text_buttons.includes(code)}">
-                            <span v-if="text_buttons.includes(code)">{{ buttons[code] }} <i
-                                class="mce-caret"></i></span>
-                            <i v-else :class="`mce-ico mce-i-${code}`" :title="buttons[code]"></i>
+                    <draggable
+                        v-model="toolbarBtns"
+                        v-bind="dragOptions"
+                        @end="onEndMove"
+                        class="toolbar"
+                    >
+                        <div
+                            v-for="code in toolbarBtns"
+                            :key="code"
+                            :class="{
+                                'toolbar-btn': true,
+                                'toolbar-btn--text':
+                                    text_buttons.includes(code),
+                            }"
+                        >
+                            <span v-if="text_buttons.includes(code)"
+                                >{{ buttons[code] }} <i class="mce-caret"></i
+                            ></span>
+                            <i
+                                v-else
+                                :class="`mce-ico mce-i-${code}`"
+                                :title="buttons[code]"
+                            ></i>
                         </div>
                     </draggable>
                     <div class="button-set mt-4">
                         <h4 class="">available buttons</h4>
-                        <draggable v-model="toolbarBtnsSet"
-                                   v-bind="dragOptions"
-                                   @end="onEndMove"
-                                   class="set-toolbar">
-                            <div v-for="(code) in toolbarBtnsSet" :key="code"
-                                 :class="{'set-toolbar-btn':true,'set-toolbar-btn--text':text_buttons.includes(code)}">
-                                <i v-if="!text_buttons.includes(code)" :class="`mce-ico mce-i-${code}`"
-                                   :title="buttons[code]"></i>
+                        <draggable
+                            v-model="toolbarBtnsSet"
+                            v-bind="dragOptions"
+                            @end="onEndMove"
+                            class="set-toolbar"
+                        >
+                            <div
+                                v-for="code in toolbarBtnsSet"
+                                :key="code"
+                                :class="{
+                                    'set-toolbar-btn': true,
+                                    'set-toolbar-btn--text':
+                                        text_buttons.includes(code),
+                                }"
+                            >
+                                <i
+                                    v-if="!text_buttons.includes(code)"
+                                    :class="`mce-ico mce-i-${code}`"
+                                    :title="buttons[code]"
+                                ></i>
                                 <span>
                                     {{ buttons[code] }}
                                 </span>
-                                <i v-if="text_buttons.includes(code)" class="mce-caret"></i>
+                                <i
+                                    v-if="text_buttons.includes(code)"
+                                    class="mce-caret"
+                                ></i>
                             </div>
                         </draggable>
                     </div>
@@ -35,16 +64,20 @@
                         <h4>Additional settings</h4>
                         <div>
                             <div class="mt-3">
-                                <x-switch label-position="right"
-                                          v-model="disableInheritanceMenu"
-                                          @change="onCheckInherence">
+                                <x-switch
+                                    label-position="right"
+                                    v-model="disableInheritanceMenu"
+                                    @change="onCheckInherence"
+                                >
                                     Disable inheritance for this editable region
                                 </x-switch>
                             </div>
                             <div class="mt-3">
-                                <x-switch label-position="right"
-                                          v-model="contextmenu"
-                                          @change="onCheckContextMenu">
+                                <x-switch
+                                    label-position="right"
+                                    v-model="contextmenu"
+                                    @change="onCheckContextMenu"
+                                >
                                     Enable right-click context menu
                                 </x-switch>
                             </div>
@@ -57,15 +90,14 @@
 </template>
 
 <script>
-
-import editor from '@/services/api/editor'
-import {get} from "lodash"
+import editor from "@/services/api/editor";
+import { get } from "lodash";
 /* import '../../../../exo_editor/src/exologEditor/exoTinyMCE/skins/exolog/skin.min.css' */
-import draggable from 'vuedraggable'
+import draggable from "vuedraggable";
 
 export default {
-    name: 'BtnSettings',
-    components: {draggable},
+    name: "BtnSettings",
+    components: { draggable },
     data() {
         return {
             config: {},
@@ -74,79 +106,84 @@ export default {
             toolbarBtns: [],
             toolbarBtnsSet: [],
             disableInheritanceMenu: false,
-            contextmenu: false
-
-        }
+            contextmenu: false,
+        };
     },
     computed: {
         buttons() {
-            return get(this.config, 'toolbar.buttons')
+            return get(this.config, "toolbar.buttons");
         },
         text_buttons() {
-            return get(this.config, 'toolbar.text_buttons')
+            return get(this.config, "toolbar.text_buttons");
         },
         dragOptions() {
             return {
                 animation: 0,
                 group: "description",
                 disabled: !this.editable,
-                ghostClass: "ghost"
+                ghostClass: "ghost",
             };
         },
     },
     mounted() {
-        this.load()
+        this.load();
     },
     methods: {
         onCheckInherence(e) {
             this.save({
                 id: this.$route.query.id,
-                field: 'extra_' + this.$route.query.field,
+                field: "extra_" + this.$route.query.field,
                 extra: true,
                 items: {
-                    'disableInheritanceMenu': Boolean(this.disableInheritanceMenu).toString()
-                }
+                    disableInheritanceMenu: Boolean(
+                        this.disableInheritanceMenu
+                    ).toString(),
+                },
             });
         },
         onCheckContextMenu(e) {
-
             this.save({
                 id: this.$route.query.optionId,
-                field: 'extra_' + this.$route.query.field,
+                field: "extra_" + this.$route.query.field,
                 extra: true,
                 items: {
-                    'contextmenu': Boolean(this.contextmenu).toString()
-                }
+                    contextmenu: Boolean(this.contextmenu).toString(),
+                },
             });
         },
         onEndMove(e) {
             this.save({
                 id: this.$route.query.optionId,
                 field: this.$route.query.field,
-                items: this.toolbarBtns
-            })
+                items: this.toolbarBtns,
+            });
         },
         async load() {
             this.config = await editor.loadToolbarButtons({
-                ...this.$route.query
-            })
-            this.toolbarBtns = this.config.options ? Object.values(this.config.options) : []
-            this.toolbarBtnsSet = Object.keys(get(this.config, 'toolbar.buttons')).filter(i => !this.toolbarBtns.includes(i))
-            this.disableInheritanceMenu = this.config.fieldExtraOptions.disableInheritanceMenu === 'true'
-            this.contextmenu = this.config.extraOptions.contextmenu === 'true'
-            this.loaded = true
+                ...this.$route.query,
+            });
+            this.toolbarBtns = this.config.options
+                ? Object.values(this.config.options)
+                : [];
+            this.toolbarBtnsSet = Object.keys(
+                get(this.config, "toolbar.buttons")
+            ).filter((i) => !this.toolbarBtns.includes(i));
+            this.disableInheritanceMenu =
+                this.config.fieldExtraOptions.disableInheritanceMenu === "true";
+            this.contextmenu = this.config.extraOptions.contextmenu === "true";
+            this.loaded = true;
         },
 
         async save(params) {
-            if (!this.loaded) return
-            editor.saveToolbarButtons(params)
-        }
-    }
-}
+            if (!this.loaded) return;
+            editor.saveToolbarButtons(params);
+        },
+    },
+};
 </script>
 
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 //todo make it common
 //@import "../../../../exo_editor/src/assets/scss/exolog-editor/mce";
@@ -187,7 +224,6 @@ export default {
         &--text {
             border: 1px solid $border-color;
             padding: 4px 7px;
-
         }
     }
 
@@ -242,7 +278,7 @@ export default {
     }
 
     .mce-i-responsivefilemanager:before {
-        content: "\e034"
+        content: "\e034";
     }
 
     .mce-i-editcssbutton {
@@ -251,8 +287,7 @@ export default {
     }
 
     .mce-i-table_of_contents:before {
-        content: "\e901"
+        content: "\e901";
     }
 }
-
 </style>

@@ -1,33 +1,33 @@
 <template>
-    <multiselect
-        v-bind="$attrs"
-        v-on="$listeners"
-        class="x-multiselect">
-        <slot v-for="(_, name) in $slots" :name="name" :slot="name"/>
-        <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-            <slot :name="name" v-bind="slotData"/>
+    <multiselect v-bind="$attrs" v-on="$listeners" class="x-multiselect">
+        <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
+        <template
+            v-for="(_, name) in $scopedSlots"
+            :slot="name"
+            slot-scope="slotData"
+        >
+            <slot :name="name" v-bind="slotData" />
         </template>
     </multiselect>
 </template>
 <script>
-import Multiselect from 'vue-multiselect'
-import 'vue-multiselect/dist/vue-multiselect.css'
+import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.css";
 
 export default {
     components: {
         Multiselect,
     },
-    methods: {}
-}
+    methods: {},
+};
 </script>
 
-
 <style lang="scss">
-@import "src/assets/scss/vue-component";
+@import "@/assets/scss/vue-component";
 
 .x-multiselect {
     min-height: calc(2.0625rem + 2px);
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 400;
     line-height: 1;
     color: #5c6873;
@@ -59,7 +59,8 @@ export default {
         }
     }
 
-    .multiselect__tag-icon:focus, .multiselect__tag-icon:hover {
+    .multiselect__tag-icon:focus,
+    .multiselect__tag-icon:hover {
         background: $primary;
 
         &:after {
@@ -86,17 +87,18 @@ export default {
         }
     }
 
-    .multiselect__input, .multiselect__single {
+    .multiselect__input,
+    .multiselect__single {
         min-height: 26px;
         line-height: 26px;
         border: none;
         background: #fff;
         padding: 0 0 0 0;
         width: 100%;
-        transition: border .1s ease;
+        transition: border 0.1s ease;
         margin-bottom: 0;
         vertical-align: top;
-        font-size: .875rem;
+        font-size: 0.875rem;
     }
 
     .multiselect__content-wrapper {
@@ -112,31 +114,27 @@ export default {
 
         &:after {
             line-height: 33px;
-
         }
     }
     .multiselect__option--highlight,
     .multiselect__option--selected {
-        background: #f5f5f5;//theme-color-level('primary', $alert-bg-level);
+        background: #f5f5f5; //theme-color-level('primary', $alert-bg-level);
         color: $input-color;
         &:after {
-            background: #f5f5f5;//theme-color-level('primary', $alert-bg-level);
+            background: #f5f5f5; //theme-color-level('primary', $alert-bg-level);
             color: $input-color;
-
         }
     }
 
     .multiselect__option--selected.multiselect__option--highlight {
-        background: theme-color-level('danger', $alert-bg-level);
+        background: theme-color-level("danger", $alert-bg-level);
         color: $input-color;
 
         &:after {
-            background: theme-color-level('danger', $alert-bg-level);
+            background: theme-color-level("danger", $alert-bg-level);
             color: $input-color;
-
         }
     }
-
 }
 </style>
 <!--<style scoped lang="scss">
