@@ -7,15 +7,17 @@
 // Import styles
 @import "@coreui/coreui/scss/coreui";
 
-// FontAwesome imports temporarily disabled for debugging
+// FontAwesome imports
+$fa-font-path: "@fortawesome/fontawesome-free/webfonts";
+@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/solid";
 
 // If you want to add something do it here
 @import "vendors/bootstrap/modals";
 @import "vendors/bootstrap/dropdown";
 @import "vendors/bootstrap/buttons";
 @import "vendors/bootstrap/forms";
-
-// FontAwesome imports temporarily disabled for debugging
 
 @import "vendors/coreui/_sidebar";
 
@@ -29,5 +31,3 @@
 @import "components/key-value-list";
 @import "components/key-value";
 @import "components/v-bar";
-
-

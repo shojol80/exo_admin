@@ -228,8 +228,8 @@ export default {
             });
         },
 
-        onRowClick(e) {
-            this.onActionEdit([e.row]);
+        onRowClick(row) {
+            this.onActionEdit([row]);
         },
         async onActionDefault(rows) {
             await editions.setDefaultEdition({ e_id: rows[0].e_id });

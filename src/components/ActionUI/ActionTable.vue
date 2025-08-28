@@ -17,7 +17,16 @@
                     <thead>
                         <tr>
                             <th v-for="column in columns" :key="column">
-                                {{ fullOptions.headings[column] || column }}
+                                <template v-if="column === 'col-check'">
+                                    <input
+                                        type="checkbox"
+                                        @change="toggleSelectAll"
+                                        :checked="isAllSelected"
+                                    />
+                                </template>
+                                <template v-else>
+                                    {{ fullOptions.headings[column] || column }}
+                                </template>
                             </th>
                         </tr>
                     </thead>
@@ -39,13 +48,23 @@
                             @click="onRowClick(item)"
                         >
                             <td v-for="column in columns" :key="column">
-                                <slot
-                                    :name="column"
-                                    :row="item"
-                                    :value="item[column]"
-                                >
-                                    {{ item[column] }}
-                                </slot>
+                                <template v-if="column === 'col-check'">
+                                    <input
+                                        type="checkbox"
+                                        @change="toggleRowSelection(item)"
+                                        :checked="isRowSelected(item)"
+                                        @click.stop
+                                    />
+                                </template>
+                                <template v-else>
+                                    <slot
+                                        :name="column"
+                                        :row="item"
+                                        :value="item[column]"
+                                    >
+                                        {{ item[column] }}
+                                    </slot>
+                                </template>
                             </td>
                         </tr>
                     </tbody>
@@ -160,7 +179,16 @@ export default {
         modelData() {
             return this.tableType === "client"
                 ? this.data
-                : this.$refs.table.data;
+                : this.$refs.table && this.$refs.table.data
+                ? this.$refs.table.data
+                : this.data;
+        },
+        isAllSelected() {
+            return (
+                this.data &&
+                this.data.length > 0 &&
+                this.selected.length === this.data.length
+            );
         },
     },
     watch: {
@@ -321,6 +349,32 @@ export default {
                 this.fullOptions.filterable = this.options.useFilterSearchQuery;
                 this.setFilter(this.emptyFilter());
             }
+        },
+        toggleSelectAll() {
+            if (this.isAllSelected) {
+                this.selected = [];
+            } else {
+                this.selected = [...this.data];
+            }
+        },
+        toggleRowSelection(row) {
+            const index = this.selected.findIndex(
+                (item) =>
+                    item[this.fullOptions.uniqueKey] ===
+                    row[this.fullOptions.uniqueKey]
+            );
+            if (index >= 0) {
+                this.selected.splice(index, 1);
+            } else {
+                this.selected.push(row);
+            }
+        },
+        isRowSelected(row) {
+            return this.selected.some(
+                (item) =>
+                    item[this.fullOptions.uniqueKey] ===
+                    row[this.fullOptions.uniqueKey]
+            );
         },
     },
     created() {
